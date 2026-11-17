@@ -60,7 +60,7 @@ The website checks these rules on the server as well as hiding buttons, so typin
 - **Subteam rosters.** Leaders see each member's assigned work, including members with no work or zero hours.
 - **CSV downloads.** Filtered task, timeline, member-hour and project-hour reports for use in a spreadsheet.
 - **Task history.** Who assigned, unassigned or changed the status of each task, and when.
-- **Built-in help.** **Help** in the page header opens the user guide inside the website, even before signing in.
+- **Built-in help.** **Help** in the page header opens the member guide inside the website, even before signing in. Officers and the Chief Engineer see extra tabs there with the guide for their role.
 - **Administrator safeguard.** The website will not let the last active Chief Engineer be demoted or removed, so the team can't lock itself out.
 
 > **Release evidence (2026-11-03 UTC):** `aero-task-hub` runs Sprint 3 commit `2e4df57`, release `v23`. Google sign-in was confirmed working by Sonny after the callback correction. Review and promotion into `dev`, `test` and `main` are tracked separately. See [the handover record](docs/SPRINT3_HANDOVER.md).
@@ -77,7 +77,7 @@ The website checks these rules on the server as well as hiding buttons, so typin
    - On **Tasks**, apply filters and select **Download CSV**, **Download member hours** or **Download project hours** for a spreadsheet.
 4. **Chief Engineer:** select **People** to add, change or remove people. See the [administrator guide](docs/ADMIN_GUIDE.md) for semester handover.
 
-Full step-by-step instructions, written so they work without screenshots, are in the [user guide](docs/USER_GUIDE.md), which is also what **Help** shows inside the website.
+Full step-by-step instructions, written so they work without screenshots, are in the [member guide](docs/USER_GUIDE.md), the [officer guide](docs/OFFICER_GUIDE.md) and the [Chief Engineer guide](docs/CHIEF_ENGINEER_GUIDE.md), which are also what **Help** shows inside the website.
 
 ## Requirements
 
@@ -116,7 +116,7 @@ Main libraries (full list with versions in `Gemfile.lock`):
 | `puma` | Web server |
 | `omniauth`, `omniauth-google-oauth2`, `omniauth-rails_csrf_protection` | Google sign-in |
 | `bcrypt` | Password hashing for the practice accounts |
-| `redcarpet` | Shows the user guide inside the website |
+| `redcarpet` | Shows the guides inside the website |
 | `importmap-rails`, `turbo-rails`, `stimulus-rails`, `propshaft` | JavaScript and stylesheet delivery |
 | `rspec-rails`, `capybara`, `selenium-webdriver`, `simplecov` | Automated tests and coverage |
 | `rubocop-rails-omakase` | Code style checks |
@@ -222,7 +222,7 @@ The observed plans are Heroku Eco and Postgres Essential-0. Record current charg
 
 ## Documentation
 
-- [User guide](docs/USER_GUIDE.md): how to use the website, by role
+- [Member guide](docs/USER_GUIDE.md), [officer guide](docs/OFFICER_GUIDE.md) and [Chief Engineer guide](docs/CHIEF_ENGINEER_GUIDE.md): how to use the website, one guide per role
 - [Administrator guide](docs/ADMIN_GUIDE.md): people and access, Google sign-in, updates, backups and recovery
 - [Deployment guide](docs/DEPLOYMENT.md)
 - [Training checklist](docs/TRAINING_GUIDE.md)

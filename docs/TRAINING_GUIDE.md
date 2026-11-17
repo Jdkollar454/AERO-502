@@ -1,6 +1,6 @@
 # Training checklist
 
-Record the training meeting with all required faces visible and keep real credentials out of the recording. Trainees follow the user guide (**Help** in the website header, or `docs/USER_GUIDE.md`).
+Record the training meeting with all required faces visible and keep real credentials out of the recording. Trainees follow the guide for their role (**Help** in the website header; `docs/USER_GUIDE.md` for members, `docs/OFFICER_GUIDE.md` for officers, `docs/CHIEF_ENGINEER_GUIDE.md` for the Chief Engineer).
 
 ## Practice accounts
 

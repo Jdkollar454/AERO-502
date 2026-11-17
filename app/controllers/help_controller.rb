@@ -1,17 +1,41 @@
-# Shows docs/USER_GUIDE.md inside the website, so the guide in the repository
-# and the one members read are always the same. Open to everyone, so people who
-# cannot sign in can still read what to do.
+# Shows the guides in docs/ inside the website, so the guide in the repository
+# and the one people read are always the same. Each role sees a tab for its
+# own guide: the member guide is open to everyone (even signed out, so people
+# who cannot sign in can still read what to do), the officer guide to leaders,
+# and the Chief Engineer and administrator guides to the Chief Engineer.
 class HelpController < ApplicationController
-     GUIDE_PATH = Rails.root.join("docs/USER_GUIDE.md")
-     ADMIN_GUIDE_PATH = Rails.root.join("docs/ADMIN_GUIDE.md")
-     before_action :require_sign_in, if: :administrator_guide?
-     before_action :ensure_administrator, if: :administrator_guide?
+     Guide = Struct.new(:key, :label, :file, :audience, :denied_message) do
+          def path
+               Rails.root.join("docs", file)
+          end
+
+          def open_to?(user)
+               case audience
+               when :everyone then true
+               when :leaders then user&.leader? || false
+               else user&.chief_engineer? || false
+               end
+          end
+     end
+
+     GUIDES = [
+          Guide.new(nil, "Member guide", "USER_GUIDE.md", :everyone, nil),
+          Guide.new("officer", "Officer guide", "OFFICER_GUIDE.md", :leaders,
+                    "Access denied. The officer guide is available to team officers and the Chief Engineer."),
+          Guide.new("chief", "Chief Engineer guide", "CHIEF_ENGINEER_GUIDE.md", :chief_engineer,
+                    "Access denied. The Chief Engineer guide is available to the Chief Engineer."),
+          Guide.new("admin", "Administrator guide", "ADMIN_GUIDE.md", :chief_engineer,
+                    "Access denied. The administrator guide is available to the Chief Engineer.")
+     ].freeze
+
+     before_action :set_guide
+     before_action :require_sign_in, unless: -> { @guide.audience == :everyone }
+     before_action :ensure_guide_access
 
      def show
           renderer = Redcarpet::Render::HTML.new(with_toc_data: true, escape_html: true)
-          @administrator_guide = administrator_guide?
-          path = @administrator_guide ? ADMIN_GUIDE_PATH : GUIDE_PATH
-          @guide_html = Redcarpet::Markdown.new(renderer, tables: true, autolink: true).render(path.read)
+          @guides = GUIDES.select { |guide| guide.open_to?(current_user) }
+          @guide_html = Redcarpet::Markdown.new(renderer, tables: true, autolink: true).render(@guide.path.read)
      end
 
      def restart
@@ -20,11 +44,13 @@ class HelpController < ApplicationController
 
      private
 
-     def administrator_guide?
-          params[:guide] == "admin" || action_name == "restart"
+     # An unknown guide name falls back to the member guide.
+     def set_guide
+          key = action_name == "restart" ? "admin" : params[:guide]
+          @guide = GUIDES.find { |guide| guide.key == key } || GUIDES.first
      end
 
-     def ensure_administrator
-          deny_access("Access denied. The administrator guide is available to the Chief Engineer.") unless current_user.chief_engineer?
+     def ensure_guide_access
+          deny_access(@guide.denied_message) unless @guide.open_to?(current_user)
      end
 end

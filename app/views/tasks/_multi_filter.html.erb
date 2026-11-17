@@ -1,0 +1,21 @@
+<%# Compact dropdown of checkboxes for a multi-value filter; submits filter[<attribute>][] like a multiple select. %>
+<% text_method = local_assigns.fetch(:text_method, :name) %>
+<% chosen = collection.select { |record| selected.include?(record.id) } %>
+<% label_id = "filter_#{attribute}_label" %>
+<% summary_id = "filter_#{attribute}_summary" %>
+<div class="field multi-filter">
+  <span class="field-label" id="<%= label_id %>"><%= label %></span>
+  <details class="multi-filter-menu" data-multi-filter data-empty-text="<%= empty_text %>">
+    <summary aria-labelledby="<%= label_id %> <%= summary_id %>">
+      <span id="<%= summary_id %>" data-multi-filter-summary><%= chosen.one? ? chosen.first.public_send(text_method) : (chosen.any? ? "#{chosen.size} selected" : empty_text) %></span>
+    </summary>
+    <div class="multi-filter-options" role="group" aria-labelledby="<%= label_id %>">
+      <% if collection.empty? %>
+        <p class="multi-filter-empty">Nothing to choose.</p>
+      <% end %>
+      <%= form.collection_check_boxes attribute, collection, :id, text_method, { checked: selected } do |box| %>
+        <%= box.label(class: "multi-filter-option") { box.check_box + content_tag(:span, box.text) } %>
+      <% end %>
+    </div>
+  </details>
+</div>

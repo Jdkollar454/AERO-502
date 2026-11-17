@@ -4,6 +4,13 @@ This guide covers the existing release and the Sprint 3 sign-in, shared-project,
 
 Never put real passwords or private member records in screenshots, notes or training material.
 
+The guide has two sections:
+
+- **Member section**, for everyone: from [Sign in](#sign-in) to [Correct or delete your hours](#correct-or-delete-your-hours).
+- **Officer section**: [For officers and the Chief Engineer](#for-officers-and-the-chief-engineer). Members can skip it.
+
+Every message the website can show is explained in [Messages and what to do](#messages-and-what-to-do).
+
 ## Sign in
 
 1. Open the website address your team supplied.
@@ -29,7 +36,7 @@ Members see the tasks assigned to them. Officers see their own team's tasks; the
 
 1. On the board, My Tasks or the Timeline, type a word in **Search tasks** to match task titles and descriptions.
 2. Choose a **Project**, a **Team** and, if needed, a **Subteam**. Projects are listed as "Team · Project" and are available to every subteam of that class. A subteam board includes a task when at least one active assignee belongs to that subteam. Subteams are listed with their team, for example "Regular Class · Aerodynamics".
-3. Select **Apply**. Only permitted tasks matching the search and selected filters are shown. Leaders can also choose a **Member** and **Task dates from/to**; the date filter includes tasks overlapping that period. Use **Additional teams** or **Additional projects** to include more selections (hold Ctrl on Windows to select several).
+3. Select **Apply**. Only permitted tasks matching the search and selected filters are shown. Leaders can also choose a **Member** and **Task dates from/to**; the date filter includes tasks overlapping that period. Use **Additional teams** or **Additional projects** to include more selections (open the dropdown and tick as many as you need).
 4. Select **Clear** to show every task you are allowed to see again.
 
 Your filters stay applied when you move between the board, My Tasks and the Timeline. A member's board first opens on their own team and subteam.
@@ -45,11 +52,11 @@ For leaders, **Member** is searchable: click or Tab into it to browse, then type
 ## Record actual hours
 
 1. Open a task assigned to you.
-2. Under **Record actual hours**, enter the hours as a number greater than 0, such as `1` or `2.5`.
+2. Under **Record actual hours**, enter the hours as a number more than 0, such as `1` or `2.5`.
 3. Choose the **Date worked** and, if you like, add a short note.
 4. Select **Add hours**. The message "Hours were recorded." appears and the entry is listed under **Time entries**.
 
-You can record at most 24 hours for one date across all your tasks.
+You can record at most 24 hours for one date across all your tasks. If an entry is refused, a message says what to change, nothing is saved, and what you typed stays in the form so you can correct it.
 
 ## Correct or delete your hours
 
@@ -139,14 +146,19 @@ Members have no export controls. Direct requests are denied. Officers' downloads
 | Google sign-in was cancelled or failed. Please try again. | The Google window was closed or Google refused the request. | Select Sign in with Google again and finish choosing your account. |
 | Please sign in to view that page. | You are signed out. | Sign in, then open the page again. |
 | Title can't be blank (or another field "can't be blank") | A required field is empty. | Fill in the field named next to the message and save again. |
-| Estimated hours is not a number / Hours is not a number | Letters or symbols were typed where a number is needed. | Type digits only, for example `1` or `2.5`, and save again. |
-| Hours must be greater than 0 | Zero or a negative number was entered. | Enter a number above 0. |
-| Hours for (date) would total (number); a member can record at most 24 hours per day | Your hours for that date across all tasks would pass 24. | Check your other entries for that date, then enter fewer hours or a different date. |
+| Hours must be a number, such as 1 or 2.5 | The hours field is empty, or letters or symbols were typed in it. | Type digits only, for example `1` or `2.5`, and select Add hours again. |
+| Hours must be more than 0 | Zero or a negative number was entered. | Enter a number above 0. |
+| The most for one day is 24 hours; your entries for (date) would total (number) | Your hours for that date across all tasks would pass 24. | Check your other entries for that date, then enter fewer hours or a different date. |
+| Date worked can't be blank | No date was chosen for the hours. | Choose the day you did the work under Date worked. |
+| You can record hours only on tasks assigned to you. | You tried to add hours to a task that is not yours. | Ask an officer to assign you, or record the hours on one of your own tasks. |
+| Estimated hours is not a number | Letters or symbols were typed where a number is needed. | Type digits only, for example `1` or `2.5`, and save again. |
+| Estimated hours must be greater than or equal to 0 | A negative estimate was entered. | Enter 0 or more. |
 | Due date must be on or after the start date | The due date is earlier than the start date. | Choose a due date on or after the start date. |
 | End date must be on or after the start date | Under Hours by member, Hours to is earlier than Hours from. | Choose a later Hours to date, or select Clear. |
 | Start date is not a valid date / End date is not a valid date | Hours by member could not read a date. | Pick the date with the date picker or type it as YYYY-MM-DD. |
 | Reference links must each be a full web address starting with http:// or https:// | A reference link is incomplete. | Put one full address per line, for example `https://example.com/plan`. |
 | You can update only tasks assigned to you. | You tried to change a task that is not yours. | Ask an officer to assign you, or update one of your own tasks. |
+| Members may update only the status of their assigned tasks. | A member tried to change something other than the status. | Change only the status, or ask an officer to edit the task. |
 | You cannot view that task. | The task belongs to work you are not allowed to see. | Return to Tasks or My Tasks. |
 | You can change only your own hours. | You tried to edit or delete someone else's entry. | Ask that member to correct their own entry. |
 | You can manage only tasks on your own team. | An officer tried to change another team's task. | Ask that team's officer or the Chief Engineer. |
@@ -167,3 +179,15 @@ Members have no export controls. Direct requests are denied. Officers' downloads
 | Project must exist | The task has no valid project. | Select a permitted project. |
 | Tasks with recorded history or logged hours cannot be deleted. | These records preserve project history. | Retain the task; archive its project when appropriate. |
 | Access denied. The administrator guide is available to the Chief Engineer. | Your role cannot open the administrator guide. | Read the user guide or contact the Chief Engineer. |
+| Name has already been taken / Email has already been taken | Another team, subteam, project or person already uses it. | Choose a different name, or find the existing entry and change that one. |
+| Email is invalid | The email address is incomplete. | Type the full address, for example `name@tamu.edu`. |
+| At least one active Chief Engineer is required. Add another Chief Engineer before removing this role or access. | The change would leave nobody able to manage people. | Add or restore another Chief Engineer first, then repeat the change. |
+| Subteam must belong to the person's team | The chosen subteam is in a different class. | Choose a Class · Subteam from the person's class. |
+| Assignees must be eligible members of this project's team | A chosen person is not an approved member or officer of the project's class. | Remove that person, or choose a project in their class. |
+| Prerequisites must be tasks you may manage within this team / Prerequisite task must belong to the same team | A prerequisite is in another class. | Select prerequisites from the same class only. |
+| Project must be active and belong to an active class | The project or its class is archived. | Choose an active project, or restore it under Teams. |
+| Project would invalidate active assignments / Team would invalidate active assignments / Subteam would invalidate active assignments; resolve them before transferring teams | The move would leave assigned people on a task outside their class. | Remove or reassign those people first, then repeat the move. |
+| Project cannot move to another team while prerequisites are linked / Team cannot change while tasks have prerequisites; resolve the links first | Prerequisite links tie the task to its current class. | Remove the prerequisite links, then move it. |
+| User must be assigned to the task / User must belong to the task's team and have a subteam membership / User cannot be an administrator | The person cannot hold that task or roster place. | Choose an approved member or officer of the task's class. |
+| Status requires an authorized person making the change / Actor must be authorized to change this task | The change was sent by someone not allowed to make it. | Sign in as an assignee or the class's officer and try again. |
+| Is primary contact requires an active assignment / Unassigned at must include an authorized remover and be on or after assignment | An assignment record was changed in a way the history does not allow. | Reopen the task, select Edit task and make the change there. |

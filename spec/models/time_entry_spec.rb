@@ -6,7 +6,7 @@ RSpec.describe TimeEntry, type: :model do
                                 hours: -2, worked_on: Date.current)
 
           expect(entry.valid?).to be_falsey
-          expect(entry.errors[:hours]).to include("must be greater than 0")
+          expect(entry.errors[:hours]).to include("must be more than 0")
      end
 
      it "rejects hours from an unassigned member" do

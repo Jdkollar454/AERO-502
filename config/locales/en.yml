@@ -33,3 +33,12 @@ en:
     attributes:
       task:
         reference_links_text: "Reference links"
+      time_entry:
+        worked_on: "Date worked"
+    errors:
+      models:
+        time_entry:
+          attributes:
+            hours:
+              greater_than: "must be more than %{count}"
+              not_a_number: "must be a number, such as 1 or 2.5"

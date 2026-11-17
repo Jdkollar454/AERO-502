@@ -7,12 +7,15 @@
   </div>
 </div>
 
-<%= form_with model: @time_entry, class: "panel task-form" do |form| %>
+<%= form_with model: @time_entry, class: "panel task-form", html: { novalidate: true } do |form| %>
   <div class="form-grid">
     <div class="field">
       <%= form.label :hours %>
-      <%= form.number_field :hours, min: 0.01, max: TimeEntry::MAX_HOURS_PER_DAY, step: 0.01, required: true, **field_error_attributes(@time_entry, :hours) %>
+      <% hours_errors = %i[hours base].select { |attribute| @time_entry.errors[attribute].any? } %>
+      <%= form.text_field :hours, inputmode: "decimal", autocomplete: "off", required: true,
+                          aria: (hours_errors.any? ? { describedby: hours_errors.map { |attribute| field_error_id(@time_entry, attribute) }.join(" "), invalid: true } : {}) %>
       <%= field_error(@time_entry, :hours) %>
+      <%= field_error(@time_entry, :base) %>
     </div>
     <div class="field">
       <%= form.label :worked_on, "Date worked" %>

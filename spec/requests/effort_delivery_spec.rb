@@ -1,18 +1,18 @@
 require "rails_helper"
 
 RSpec.describe "Effort and dashboard delivery", type: :request do
-     it "renders hour constraints that accept ordinary positive decimal entries" do
+     it "accepts ordinary positive decimal entries with no browser limit in the way" do
+          task = tasks(:wing_test)
           sign_in(users(:member))
-          get task_path(tasks(:wing_test))
+          get task_path(task)
 
           field = response.parsed_body.at_css('input[name="time_entry[hours]"]')
-          minimum = BigDecimal(field["min"])
-          step = BigDecimal(field["step"])
-          expect(minimum).to be > 0
+          expect(field["inputmode"]).to eq("decimal")
+          expect([ field["min"], field["max"], field["step"] ]).to all(be_nil)
           [ "0.01", "1", "1.5", "2.5" ].each do |value|
-               hours = BigDecimal(value)
-               expect(hours).to be >= minimum
-               expect((hours - minimum) % step).to eq(0), "browser step rejects #{value} hours"
+               expect {
+                    post task_time_entries_path(task), params: { time_entry: { hours: value, worked_on: "2026-09-28" } }
+               }.to change(TimeEntry, :count).by(1), "website rejects #{value} hours"
           end
      end
 
@@ -115,6 +115,9 @@ RSpec.describe "Effort and dashboard delivery", type: :request do
           get tasks_path
           expect(response).to have_http_status(:success)
           expect(response.body).to include("No tasks found", "There are no permitted tasks on this board.")
+
+          get tasks_path(view: "mine")
+          expect(response.parsed_body.css(".empty-state").map { |panel| panel.at_css("p").text }).to eq([ "No tasks are assigned to you." ])
      end
 
      private

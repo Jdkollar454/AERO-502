@@ -24,15 +24,41 @@ RSpec.describe "Recording actual hours", type: :request do
           sign_in(member)
 
           {
-               "0" => "Hours must be greater than 0",
-               "-1" => "Hours must be greater than 0",
-               "25" => "a member can record at most 24 hours per day",
-               "abc" => "Hours is not a number"
+               "0" => "Hours must be more than 0",
+               "-1" => "Hours must be more than 0",
+               "25" => "The most for one day is 24 hours; your entries for September 30, 2026 would total 25",
+               "abc" => "Hours must be a number, such as 1 or 2.5"
           }.each do |hours, message|
                expect { log_hours(hours) }.not_to change(TimeEntry, :count)
                follow_redirect!
-               expect(response.body).to include(message)
+               expect(response.parsed_body.at_css(".flash-alert").text).to include(message)
           end
+     end
+
+     it "asks for the date when it is left blank" do
+          sign_in(member)
+
+          expect { log_hours("2", worked_on: "") }.not_to change(TimeEntry, :count)
+          follow_redirect!
+          expect(response.parsed_body.at_css(".flash-alert").text).to include("Date worked can't be blank")
+     end
+
+     it "lets the website, not the browser, answer a mistake and keeps what was typed" do
+          sign_in(member)
+          get task_path(task)
+
+          form = response.parsed_body.at_css("form[action='#{task_time_entries_path(task)}']")
+          field = form.at_css("#time_entry_hours")
+          expect(form["novalidate"]).to be_present
+          expect(field["type"]).to eq("text")
+          expect([ field["min"], field["max"] ]).to all(be_nil)
+
+          post task_time_entries_path(task), params: { time_entry: { hours: "abc", worked_on: "2026-09-30", note: "Layup" } }
+          follow_redirect!
+          form = response.parsed_body.at_css("form[action='#{task_time_entries_path(task)}']")
+          expect(form.at_css("#time_entry_hours")["value"]).to eq("abc")
+          expect(form.at_css("#time_entry_worked_on")["value"]).to eq("2026-09-30")
+          expect(form.at_css("#time_entry_note")["value"]).to eq("Layup")
      end
 
      it "limits a member's total for one worked date to 24 hours across all tasks" do
@@ -59,7 +85,8 @@ RSpec.describe "Recording actual hours", type: :request do
 
           patch time_entry_path(entry), params: { time_entry: { hours: "24.5" } }
           expect(response).to have_http_status(:unprocessable_content)
-          expect(response.body).to include("at most 24 hours per day")
+          expect(response.parsed_body.at_css("#time_entry_base_error").text).to include("The most for one day is 24 hours")
+          expect(response.parsed_body.at_css("#time_entry_hours")["aria-describedby"]).to include("time_entry_base_error")
           expect(entry.reload.hours).to eq(3.25)
      end
 

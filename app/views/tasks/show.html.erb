@@ -66,9 +66,10 @@
 
       <section class="panel">
         <h2>Record actual hours</h2>
-        <%= form_with model: [@task, @time_entry], class: "inline-form" do |form| %>
+        <%# novalidate and a text field let the website's own message, not a browser tooltip, explain a mistake. %>
+        <%= form_with model: [@task, @time_entry], class: "inline-form", html: { novalidate: true } do |form| %>
           <%= form.label :hours %>
-          <%= form.number_field :hours, min: 0.01, max: TimeEntry::MAX_HOURS_PER_DAY, step: 0.01, required: true %>
+          <%= form.text_field :hours, inputmode: "decimal", autocomplete: "off", required: true %>
           <%= form.label :worked_on, "Date worked" %>
           <%= form.date_field :worked_on, required: true %>
           <%= form.label :note, "Note (optional)" %>

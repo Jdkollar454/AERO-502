@@ -17,8 +17,12 @@
 </div>
 
 <% if current_user.leader? %>
-  <div class="field"><%= form.label :project_ids, "Additional projects" %><%= form.collection_select :project_ids, Project.active.where(team_id: (current_user.chief_engineer? ? Team.select(:id) : [current_user.team_id])).order(:name), :id, :name, { selected: task_filter.project_ids }, multiple: true %></div>
-  <div class="field"><%= form.label :team_ids, "Additional teams" %><%= form.collection_select :team_ids, (current_user.chief_engineer? ? Team.active : Team.where(id: current_user.team_id)).order(:name), :id, :name, { selected: task_filter.team_ids }, multiple: true %></div>
+  <%= render "tasks/multi_filter", form: form, attribute: :project_ids, label: "Additional projects", empty_text: "None",
+        collection: Project.active.where(team_id: (current_user.chief_engineer? ? Team.select(:id) : [current_user.team_id])).includes(:team).sort_by(&:full_name),
+        text_method: :full_name, selected: task_filter.project_ids %>
+  <%= render "tasks/multi_filter", form: form, attribute: :team_ids, label: "Additional teams", empty_text: "None",
+        collection: (current_user.chief_engineer? ? Team.active : Team.where(id: current_user.team_id)).order(:name).to_a,
+        selected: task_filter.team_ids %>
   <div class="field" data-member-filter>
     <%= form.label :member_id, "Member" %>
     <%= form.collection_select :member_id, User.in_teams(current_user.chief_engineer? ? Team.select(:id) : [current_user.team_id]).order(:name), :id, :name, { selected: task_filter.member_id, include_blank: "All members" }, data: { member_filter_source: true } %>

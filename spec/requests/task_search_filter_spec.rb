@@ -88,9 +88,28 @@ RSpec.describe "Task search and filters", type: :request do
           get tasks_path
 
           controls = response.parsed_body.css(".filter-bar input[type=search], .filter-bar select")
-          expect(controls.size).to eq(7)
+          expect(controls.size).to eq(5)
           controls.each do |control|
                expect(response.parsed_body.at_css("label[for='#{control["id"]}']")).to be_present
           end
+
+          menus = response.parsed_body.css(".filter-bar [data-multi-filter]")
+          expect(menus.size).to eq(2)
+          menus.each do |menu|
+               label_ids = menu.at_css("summary")["aria-labelledby"].split
+               expect(label_ids).to all(satisfy { |id| response.parsed_body.at_css("##{id}").present? })
+               expect(menu.at_css("[role=group]")["aria-labelledby"]).to eq(label_ids.first)
+               menu.css("input[type=checkbox]").each do |box|
+                    expect(box.ancestors("label")).to be_present
+               end
+          end
+     end
+
+     it "submits additional projects and teams from the checkbox dropdowns" do
+          sign_in(users(:officer))
+          get tasks_path
+
+          boxes = response.parsed_body.css(".filter-bar input[type=checkbox]")
+          expect(boxes.map { |box| box["name"] }.uniq).to contain_exactly("filter[project_ids][]", "filter[team_ids][]")
      end
 end

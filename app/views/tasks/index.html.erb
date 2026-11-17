@@ -37,7 +37,13 @@
 <% if @tasks.none? %>
   <div class="panel empty-state">
     <h2>No tasks found</h2>
-    <p><%= task_filter.active? && Task.accessible_to(current_user).exists? ? "No tasks match your search or filters." : "There are no permitted tasks on this board." %></p>
+    <p><%= if task_filter.active? && Task.accessible_to(current_user).exists?
+             "No tasks match your search or filters."
+           elsif @view == "mine"
+             "No tasks are assigned to you."
+           else
+             "There are no permitted tasks on this board."
+           end %></p>
   </div>
 <% end %>
 <% if flash[:unassigned_project_id] %>
@@ -86,9 +92,4 @@
     <% end %>
   </div>
   <%= render "tasks/hours", hours: @hours if @hours %>
-<% else %>
-  <div class="panel empty-state">
-    <h2>No tasks found</h2>
-    <p><%= @view == "mine" ? "No tasks are assigned to you." : "There are no permitted tasks on this board." %></p>
-  </div>
 <% end %>

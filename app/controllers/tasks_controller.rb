@@ -25,7 +25,9 @@ class TasksController < ApplicationController
      end
 
      def show
-          @time_entry = TimeEntry.new(worked_on: Date.current)
+          # A refused entry comes back with what the member typed, so they correct it rather than retype it.
+          refused = (flash[:time_entry] || {}).to_h.slice("hours", "note", "worked_on")
+          @time_entry = TimeEntry.new({ "worked_on" => Date.current }.merge(refused))
      end
 
      def new

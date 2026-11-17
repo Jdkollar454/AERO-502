@@ -25,8 +25,7 @@ class TimeEntry < ApplicationRecord
           total = other_hours + hours
           return if total <= MAX_HOURS_PER_DAY
 
-          errors.add(:hours, "for #{worked_on.to_fs(:long)} would total " \
-                             "#{total.to_s("F").delete_suffix(".0")}; a member can record at most " \
-                             "#{MAX_HOURS_PER_DAY} hours per day")
+          errors.add(:base, "The most for one day is #{MAX_HOURS_PER_DAY} hours; your entries for " \
+                            "#{worked_on.to_fs(:long)} would total #{total.to_s("F").delete_suffix(".0")}")
      end
 end

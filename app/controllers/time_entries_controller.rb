@@ -14,6 +14,7 @@ class TimeEntriesController < ApplicationController
           if save_within_daily_limit(entry)
                redirect_to task, notice: "Hours were recorded."
           else
+               flash[:time_entry] = time_entry_params.to_h
                redirect_to task, alert: entry.errors.full_messages.to_sentence
           end
      end

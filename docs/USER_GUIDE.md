@@ -36,7 +36,7 @@ Members see the tasks assigned to them. Officers see their own team's tasks; the
 
 1. On the board, My Tasks or the Timeline, type a word in **Search tasks** to match task titles and descriptions.
 2. Choose a **Project**, a **Team** and, if needed, a **Subteam**. Projects are listed as "Team · Project" and are available to every subteam of that class. A subteam board includes a task when at least one active assignee belongs to that subteam. Subteams are listed with their team, for example "Regular Class · Aerodynamics".
-3. Select **Apply**. Only permitted tasks matching the search and selected filters are shown. Leaders can also choose a **Member** and **Task dates from/to**; the date filter includes tasks overlapping that period. Use **Additional teams** or **Additional projects** to include more selections (hold Ctrl on Windows to select several).
+3. Select **Apply**. Only permitted tasks matching the search and selected filters are shown. Leaders can also choose a **Member** and **Task dates from/to**; the date filter includes tasks overlapping that period. Use **Additional teams** or **Additional projects** to include more selections (open the dropdown and tick as many as you need).
 4. Select **Clear** to show every task you are allowed to see again.
 
 Your filters stay applied when you move between the board, My Tasks and the Timeline. A member's board first opens on their own team and subteam.

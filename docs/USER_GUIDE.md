@@ -1,16 +1,5 @@
 # AERO Task Hub member guide
 
-This guide covers the existing release and the Sprint 3 sign-in, shared-project, roster, timeline and reporting changes. Open it any time from **Help** in the page header or from the sign-in page. Every step is written out in words; nothing depends on a screenshot or on color. Every link, field and button can be reached with Tab and used with Enter or Space.
-
-Never put real passwords or private member records in screenshots, notes or training material.
-
-This is the **Member guide**. It covers what every person does: signing in, finding work, updating status and recording hours. Officers and the Chief Engineer see extra tabs at the top of Help with the steps for their role:
-
-- **Officer guide**: creating and assigning tasks, the board summary, the timeline, teams, rosters and reports.
-- **Chief Engineer guide**: adding people and changing roles or access.
-
-Every message you can meet as a member is explained in [Messages and what to do](#messages-and-what-to-do).
-
 ## Sign in
 
 1. Open the website address your team supplied.

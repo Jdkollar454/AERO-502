@@ -65,5 +65,5 @@ Repeated on November 17, 2026 from an empty database (`bin/rails db:drop`), foll
 ## Not covered by this check
 
 - Updating the live website was not rehearsed here. The three releases of November 16 and 17 (v25 to v27) were real updates made by merging into `main`; see [the final release verification](FINAL_RELEASE_VERIFICATION.md).
-- A restore of a production backup into a separate database has not been timed and recorded since the November 2 transfer. It is listed as an open item in the turnover notebook.
-- The offline restart PDF (`docs/RESTART_GUIDE.pdf`) still has blank hosting and support fields.
+- The restore of a production backup into a separate database was rehearsed later the same evening by following the administrator guide; see [the recovery rehearsal](RECOVERY_CHECK.md).
+- The offline restart PDF (`docs/RESTART_GUIDE.pdf`) had blank hosting and support fields; they are filled in on this branch.

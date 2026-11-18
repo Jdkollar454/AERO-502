@@ -130,7 +130,7 @@ Production also reported PostgreSQL 18.4, Rails 8.1.4 and Ruby 4.0.6.
 
 - Heroku owner: Joshua Eng's account. Collaborators: JD Kollar (customer) and two development-team accounts. Ownership transfer to the customer has **not** happened yet.
 - Plans: one Eco web dyno and Heroku Postgres Essential-0.
-- Backups on the app: `b005` (2026-11-17 05:19 UTC, before release v25), `b003` and `b002` (2026-11-03), `b001` (2026-11-02). No backup schedule is configured (`heroku pg:backups:schedules` reports none).
+- Backups on the app: `b005` (2026-11-17 05:19 UTC, before release v25), `b003` and `b002` (2026-11-03), `b001` (2026-11-02). No backup schedule was configured when this was first checked; a daily backup at 2:00 a.m. Central time was scheduled later that evening and backup `b006` was captured and restored into a separate database. See [the recovery rehearsal](RECOVERY_CHECK.md).
 - Password sign-in for practice accounts is still enabled (`PASSWORD_SIGN_IN` is not `off`). The People list holds 11 accounts: 3 Chief Engineers, 3 officers and 5 members, of which 6 are practice accounts. JD Kollar has a Chief Engineer account.
 - The earlier staging app at `protected-beyond-83306` answered "No such app" on November 17. A new staging app, `aero-task-hub-staging`, was created that evening and runs the same commit; see [the staging check](STAGING_CHECK.md).
 

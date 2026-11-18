@@ -36,7 +36,7 @@
 | The timeline shows no scrollbar when every task fits in about eight weeks (found November 6; unchanged since). | Sideways scrolling cannot be seen on a short schedule. | None needed; it appears when the schedule is longer. |
 | The first visit after the site has been idle takes several seconds. | Slow first page on the Eco hosting plan. | Wait; later pages are fast. |
 | Practice accounts (`@example.test`) and password sign-in are still enabled on the live website for customer testing. | Anyone who has the practice password can use a practice account, including the practice Chief Engineer. | After UAT, remove access for the practice accounts under **People** and set `PASSWORD_SIGN_IN` to `off`. |
-| The offline restart PDF has blank hosting and support fields. | The printed copy is incomplete. | Use the administrator guide under Help. |
+| The restart PDF offered under Help has blank hosting and support fields until the documentation branch is merged. | The downloaded copy is incomplete. | Use the filled copy in the repository, or the administrator guide under Help. |
 
 ### Not included
 

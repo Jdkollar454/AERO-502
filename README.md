@@ -229,7 +229,7 @@ The observed plans (November 17, 2026) are one Heroku Eco dyno ($5 per month, fl
 - [Training checklist](docs/TRAINING_GUIDE.md)
 - [Quality strategy](docs/QUALITY_STRATEGY.md) and [verification results](docs/VERIFICATION.md)
 - [Google sign-in verification](docs/KAN25_VERIFICATION.md)
-- Turnover records: [release notes](docs/turnover/RELEASE_NOTES.md), [final release verification](docs/turnover/FINAL_RELEASE_VERIFICATION.md), [cumulative test results](docs/turnover/TEST_RESULTS.md), [security check](docs/turnover/SECURITY_CHECK.md), [staging check](docs/turnover/STAGING_CHECK.md), [database design check](docs/turnover/DATABASE_DESIGN_CHECK.md) and [developer instruction check](docs/turnover/DEVELOPER_INSTRUCTION_CHECK.md)
+- Turnover records: [release notes](docs/turnover/RELEASE_NOTES.md), [final release verification](docs/turnover/FINAL_RELEASE_VERIFICATION.md), [cumulative test results](docs/turnover/TEST_RESULTS.md), [security check](docs/turnover/SECURITY_CHECK.md), [staging check](docs/turnover/STAGING_CHECK.md), [recovery rehearsal](docs/turnover/RECOVERY_CHECK.md), [database design check](docs/turnover/DATABASE_DESIGN_CHECK.md) and [developer instruction check](docs/turnover/DEVELOPER_INSTRUCTION_CHECK.md)
 - [Sprint 3 stories and migration verification](docs/SPRINT3_STORIES_VERIFICATION.md)
 - External: [Rails Guides](https://guides.rubyonrails.org/), [RSpec Rails](https://rspec.info/), [OmniAuth Google OAuth2](https://github.com/zquestz/omniauth-google-oauth2), [Heroku Config Vars](https://devcenter.heroku.com/articles/config-vars), [Heroku Postgres backups](https://devcenter.heroku.com/articles/heroku-postgres-backups)
 

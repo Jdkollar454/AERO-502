@@ -9,6 +9,7 @@
 - Heroku owner observed: Joshua's account. JD's ownership transfer remains pending.
 - Database: `postgresql-convex-72612`; Postgres Essential-0, version reported as 18.4.
 - `sleepy-bayou-60650` was paused as a fallback. Its deletion has not been confirmed.
+- Staging app: `aero-task-hub-staging`, https://aero-task-hub-staging-ca661d8bf0bf.herokuapp.com/, with its own Essential-0 database and practice data only. It does not deploy automatically; see [the staging check](turnover/STAGING_CHECK.md) for how to update it. Check a release there before merging it into `main`.
 
 Heroku deploys `main` automatically after its CI run passes: releases v25, v26 and v27 each followed a merge into `main` within a few minutes. A merge into `main` is therefore a release. Use the normal feature → dev → test → main flow, and confirm the setting under Heroku dashboard → app → **Deploy** after any ownership change.
 

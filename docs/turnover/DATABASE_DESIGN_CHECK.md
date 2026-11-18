@@ -18,7 +18,7 @@ Checked by Joshua Eng on November 17, 2026 against [`db/structure.sql`](https://
 | Sign-in provider (OAuth) tables | 0 | Google sign-in stores nothing of its own; the app matches the verified email against USERS |
 | Framework support tables, not counted | 2 | `schema_migrations`, `ar_internal_metadata` (Rails) |
 
-Team size: 2 current members (Joshua Eng, Sonny Hernandez); 4 when the project started. Ten qualifying tables meet the requirement of one per team member under either count.
+Team size: 2 members (Joshua Eng, Sonny Hernandez). Ten qualifying tables meet the requirement of one per team member.
 
 ## Implementation compared with the approved ERD
 

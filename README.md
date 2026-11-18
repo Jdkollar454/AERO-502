@@ -236,7 +236,7 @@ The observed plans (November 17, 2026) are one Heroku Eco dyno ($5 per month, fl
 ## Support
 
 - **Members and officers:** start with **Help** in the website. For access problems ("Access not authorized"), contact the Chief Engineer, who can add or restore you under **People**.
-- **Chief Engineer:** see the [administrator guide](docs/ADMIN_GUIDE.md). Until handover is complete, the development team below can help.
+- **Chief Engineer:** see the [administrator guide](docs/ADMIN_GUIDE.md). The development team below can help until course support ends on **November 23, 2026**.
 - **Bugs and requests:** open an issue at https://github.com/joshEng1/AERO-502/issues.
 
 ## Contact
@@ -245,7 +245,6 @@ The observed plans (November 17, 2026) are one Heroku Eco dyno ($5 per month, fl
 | --- | --- | --- |
 | Joshua Eng | Developer | [@joshEng1](https://github.com/joshEng1) |
 | Sonny Hernandez | Developer | [@SonnyHernandez90](https://github.com/SonnyHernandez90) |
-| Rahul Saravanakumar | Developer through Sprint 3 | [@rahulsaravanakumar](https://github.com/rahulsaravanakumar) |
 
 **Customer:** JD Kollar, SAE AERO Design (Texas A&M).
 

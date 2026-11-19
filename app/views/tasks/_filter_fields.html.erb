@@ -25,7 +25,7 @@
         selected: task_filter.team_ids %>
   <div class="field" data-member-filter>
     <%= form.label :member_id, "Member" %>
-    <%= form.collection_select :member_id, User.in_teams(current_user.chief_engineer? ? Team.select(:id) : [current_user.team_id]).order(:name), :id, :name, { selected: task_filter.member_id, include_blank: "All members" }, data: { member_filter_source: true } %>
+    <%= form.collection_select :member_id, task_filter_people, :id, :name, { selected: task_filter.member_id, include_blank: "All members" }, data: { member_filter_source: true } %>
   </div>
   <div class="field"><%= form.label :task_from, "Task dates from" %><%= form.date_field :task_from, value: task_filter.task_from %></div>
   <div class="field"><%= form.label :task_to, "Task dates to" %><%= form.date_field :task_to, value: task_filter.task_to %></div>

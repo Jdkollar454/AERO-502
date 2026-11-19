@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Sprint 3 assignment and ownership boundaries" do
      it "rejects ineligible assignees and partially ended or primary ended periods" do
-          [ users(:chief), users(:other_member) ].each do |person|
+          [ users(:other_member) ].each do |person|
                assignment = TaskAssignment.new(task: tasks(:wing_test), user: person, assigned_by: users(:chief), assigned_at: Time.current)
                expect(assignment).not_to be_valid
                expect(assignment.errors[:user]).to be_present

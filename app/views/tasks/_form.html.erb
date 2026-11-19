@@ -63,9 +63,9 @@
 
   <div class="field member-selector" data-member-selector>
     <%= form.label :assignee_ids, "Assigned members" %>
-    <p class="hint" id="member-selector-help">Browse or search by name. Select several members; remove a name to end its assignment. Only members and officers of the project's class are eligible.</p>
+    <p class="hint" id="member-selector-help">Browse or search by name. Select several members; remove a name to end its assignment. Members and officers must belong to the project's class. Chief Engineers can also select their own name for any class.</p>
     <%= hidden_field_tag "task[assignee_ids][]", "", id: nil %>
-    <%= select_tag "task[assignee_ids][]", options_for_select(@assignees.map { |member| [member.name, member.id, {"data-team-id" => member.team_id}] }, @selected_assignee_ids), multiple: true, size: 5, id: "task_assignee_ids", data: { member_source: true }, aria: { describedby: "member-selector-help" } %>
+    <%= select_tag "task[assignee_ids][]", options_for_select(@assignees.map { |member| [member.name, member.id, {"data-team-id" => member.team_id, "data-all-teams" => member.chief_engineer?}] }, @selected_assignee_ids), multiple: true, size: 5, id: "task_assignee_ids", data: { member_source: true }, aria: { describedby: "member-selector-help" } %>
   </div>
   <div class="field">
     <%= form.label :primary_contact_id, "Primary contact (optional)" %>

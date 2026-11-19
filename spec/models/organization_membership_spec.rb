@@ -43,13 +43,14 @@ RSpec.describe "Approved organization membership integrity" do
           expect(tasks(:wing_test).subteams).to contain_exactly(second)
      end
 
-     it "requires resolving active assignments before moving between teams or promoting to administrator" do
+     it "requires resolving cross-team assignments but preserves work when promoting to chief" do
           person = users(:member)
           expect(person.update(subteam: subteams(:airframe))).to be_falsey
           expect(person.reload.subteam).to eq(subteams(:wing))
-          tasks(:wing_test).assign_members([], actor: users(:chief))
           person.update!(role: :chief_engineer, subteam: nil)
+          ApplicationRecord.connection.execute("SET CONSTRAINTS ALL IMMEDIATE")
           expect(person.reload.membership).to be_nil
+          expect(person.assigned_task_ids).to eq([ tasks(:wing_test).id ])
           expect(person.task_assignments.count).to eq(1)
           expect(person.time_entries.sum(:hours)).to eq(2.5)
      end
@@ -71,7 +72,10 @@ RSpec.describe "Approved organization membership integrity" do
           reject_database_change { projects(:aero).update_columns(team_id: teams(:structures).id) }
           reject_database_change { subteams(:wing).update_columns(team_id: teams(:structures).id) }
           reject_database_change { tasks(:wing_test).update_columns(project_id: projects(:airframe_build).id) }
-          reject_database_change { TaskAssignment.new(task: tasks(:wing_test), user: users(:chief), assigned_by: users(:chief), assigned_at: Time.current).save!(validate: false) }
+          ApplicationRecord.transaction(requires_new: true) do
+               TaskAssignment.create!(task: tasks(:wing_test), user: users(:chief), assigned_by: users(:chief), assigned_at: Time.current)
+               ApplicationRecord.connection.execute("SET CONSTRAINTS ALL IMMEDIATE")
+          end
      end
 
      it "rejects invalid roles and incompatible application-level ownership changes" do

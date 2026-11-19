@@ -15,7 +15,15 @@ class User < ApplicationRecord
 
      scope :in_teams, ->(ids) { joins(membership: :subteam).where(subteams: { team_id: ids }) }
      scope :in_subteam, ->(id) { joins(:membership).where(memberships: { subteam_id: id }) }
-     scope :assignable, -> { where(role: [ :member, :officer ], access_revoked_at: nil).joins(:membership) }
+     scope :listed, -> { where(removed_at: nil) }
+     scope :allowed_to_sign_in, -> { listed.where(access_revoked_at: nil) }
+     scope :assignable, -> { allowed_to_sign_in.where(role: [ :member, :officer ]).joins(:membership) }
+
+     # Chiefs have no team membership and may add themselves to any team's work.
+     def self.task_candidates(team_ids, actor:)
+          candidates = where(id: assignable.in_teams(team_ids).select(:id))
+          actor.chief_engineer? ? candidates.or(allowed_to_sign_in.where(id: actor.id)) : candidates
+     end
 
      ROLE_LABELS = { "member" => "Member", "officer" => "Officer", "chief_engineer" => "Chief Engineer" }.freeze
      ROLES_WITH_ARTICLE = { "member" => "a Member", "officer" => "an Officer", "chief_engineer" => "a Chief Engineer" }.freeze
@@ -75,7 +83,11 @@ class User < ApplicationRecord
      end
 
      def access_revoked?
-          access_revoked_at.present?
+          access_revoked_at.present? || removed?
+     end
+
+     def removed?
+          removed_at.present?
      end
 
      def authenticate_password_sign_in(password)
@@ -108,6 +120,7 @@ class User < ApplicationRecord
      end
 
      def assignments_stay_eligible
+          return if chief_engineer?
           return unless persisted? && task_assignments.active.joins(task: :project).where.not(projects: { team_id: team_id }).exists?
 
           errors.add(:subteam, "cannot change teams until incompatible active assignments are resolved")
@@ -118,7 +131,7 @@ class User < ApplicationRecord
           return if chief_engineer? && !access_revoked?
 
           self.class.connection.execute("SELECT pg_advisory_xact_lock(260026)")
-          return if self.class.chief_engineer.where(access_revoked_at: nil).where.not(id: id).exists?
+          return if self.class.chief_engineer.allowed_to_sign_in.where.not(id: id).exists?
 
           errors.add(:base, "At least one active Chief Engineer is required. Add another Chief Engineer before removing this role or access.")
      end

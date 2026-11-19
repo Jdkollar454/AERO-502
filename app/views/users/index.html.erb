@@ -4,45 +4,81 @@
   <div>
     <p class="eyebrow">ADMINISTRATION</p>
     <h1>People and roles</h1>
-    <p class="lede">Only people listed here can sign in. Change a person's role or team; new permissions apply the next time they load a page.</p>
+    <p class="lede">Find people, manage roles and restrict access. Remove people who leave the club while keeping their contributions.</p>
   </div>
   <%= link_to "Add person", new_user_path, class: "button" %>
 </div>
 
-<section class="panel">
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Role</th>
-          <th scope="col">Team</th>
-          <th scope="col">Access</th>
-          <th scope="col"><span class="visually-hidden">Actions</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @users.each do |user| %>
-          <tr>
-            <th scope="row"><%= user.name %></th>
-            <td><%= user.email %></td>
-            <td><%= user.role_label %></td>
-            <td><%= user.team&.name || "All teams" %><%= " · #{user.subteam.name}" if user.subteam %></td>
-            <td><%= user.access_revoked? ? "Access removed" : "Can sign in" %></td>
-            <td>
-              <div class="row-actions">
-                <%= link_to "Change role", edit_user_path(user), aria: { label: "Change role for #{user.name}" } %>
-                <% if user.access_revoked? %>
-                  <%= button_to "Restore access", restore_user_path(user), method: :patch, class: "link-button", aria: { label: "Restore access for #{user.name}" } %>
-                <% else %>
-                  <%= button_to "Remove access", revoke_user_path(user), method: :patch, class: "link-button", aria: { label: "Remove access for #{user.name}" } %>
-                <% end %>
-              </div>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+<nav class="segmented people-views" aria-label="People lists">
+  <%= link_to "Current people", users_path(q: @query), class: (@view == "current" ? "active" : nil), aria: { current: (@view == "current" ? "page" : nil) } %>
+  <%= link_to "Removed people", users_path(view: "removed", q: @query), class: (@view == "removed" ? "active" : nil), aria: { current: (@view == "removed" ? "page" : nil) } %>
+</nav>
+
+<%= form_with url: users_path, method: :get, class: "panel filter-bar", role: "search" do |form| %>
+  <%= hidden_field_tag :view, @view %>
+  <div class="field">
+    <%= form.label :q, "Search people" %>
+    <%= form.search_field :q, value: @query, placeholder: "Name or email", autocomplete: "off" %>
   </div>
+  <div class="filter-actions">
+    <%= form.submit "Search", class: "button" %>
+    <%= link_to "Clear", users_path(view: @view), class: "button button-secondary" if @query.present? %>
+  </div>
+<% end %>
+
+<section class="panel">
+  <p role="status"><%= pluralize(@total, "person", "people") %><%= " matching “#{@query}”" if @query.present? %> · Page <%= @page %> of <%= @pages %></p>
+  <% if @view == "removed" %>
+    <p class="muted">These people cannot sign in. Their contributions are kept; restoring a person returns them to the current list and restores sign-in access.</p>
+  <% end %>
+  <% if @users.empty? %>
+    <p class="empty-state">No people found<%= " for this search" if @query.present? %>.</p>
+  <% else %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Team</th>
+            <th scope="col">Access</th>
+            <th scope="col"><span class="visually-hidden">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr>
+              <th scope="row"><%= user.name %></th>
+              <td><%= user.email %></td>
+              <td><%= user.role_label %></td>
+              <td><%= user.team&.name || "All teams" %><%= " · #{user.subteam.name}" if user.subteam %></td>
+              <td><%= user.removed? ? "Removed from People" : (user.access_revoked? ? "Access removed" : "Can sign in") %></td>
+              <td>
+                <div class="row-actions">
+                  <% if user.removed? %>
+                    <%= button_to "Restore person", restore_user_path(user), method: :patch, class: "link-button", aria: { label: "Restore person #{user.name}" } %>
+                  <% else %>
+                    <%= link_to "Change role", edit_user_path(user), aria: { label: "Change role for #{user.name}" } %>
+                    <% if user.access_revoked? %>
+                      <%= button_to "Restore access", restore_user_path(user), method: :patch, class: "link-button", aria: { label: "Restore access for #{user.name}" } %>
+                    <% else %>
+                      <%= button_to "Restrict access", revoke_user_path(user), method: :patch, class: "link-button", aria: { label: "Restrict access for #{user.name}" } %>
+                    <% end %>
+                    <%= link_to "Remove person", removal_user_path(user), aria: { label: "Remove person #{user.name}" } %>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+  <% if @pages > 1 %>
+    <nav class="people-pagination" aria-label="People pages">
+      <%= link_to "Previous", users_path(view: @view, q: @query, page: @page - 1), class: "button button-secondary", rel: "prev" if @page > 1 %>
+      <%= link_to "Next", users_path(view: @view, q: @query, page: @page + 1), class: "button button-secondary", rel: "next" if @page < @pages %>
+    </nav>
+  <% end %>
 </section>

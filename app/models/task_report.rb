@@ -9,6 +9,8 @@ class TaskReport
           cohort = cohort.in_teams(filter.selected_team_ids) if filter.selected_team_ids.any?
           cohort = cohort.in_teams(Project.where(id: filter.selected_project_ids).select(:team_id)) if filter.selected_project_ids.any?
           cohort = cohort.in_subteam(filter.subteam_id) if filter.subteam_id
-          @hours = HourSummary.new(tasks: @tasks, from: from, to: to, members: cohort.distinct, member_id: filter.member_id)
+          # Include chiefs and former members whose work appears in this task set.
+          contributors = @tasks.flat_map { |task| task.assignees.to_a + task.time_entries.map(&:user) }
+          @hours = HourSummary.new(tasks: @tasks, from: from, to: to, members: (cohort.distinct.to_a + contributors).uniq, member_id: filter.member_id)
      end
 end

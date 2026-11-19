@@ -1,4 +1,11 @@
 module ApplicationHelper
+     def task_filter_people
+          team_ids = current_user.chief_engineer? ? Team.select(:id) : [ current_user.team_id ]
+          team_people = User.in_teams(team_ids).select(:id)
+          contributors = TaskAssignment.where(task_id: Task.accessible_to(current_user).select(:id)).select(:user_id)
+          User.where(id: team_people).or(User.where(id: contributors)).order(:name, :id)
+     end
+
      # Active subteams labelled with their team, since names repeat across teams.
      def subteam_options(selected)
           subteams = Subteam.active.joins(:team).merge(Team.active).includes(:team).order("teams.name", :name)

@@ -13,6 +13,7 @@ class TaskAssignment < ApplicationRecord
 
      def assignee_belongs_to_task_team
           return if unassigned_at || task.blank? || user.blank?
+          return if user.chief_engineer?
           return if !user.chief_engineer? && user.subteam && user.team_id == task.team_id
 
           errors.add(:user, "must belong to the task's team and have a subteam membership")

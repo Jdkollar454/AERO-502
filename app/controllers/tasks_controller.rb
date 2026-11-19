@@ -147,8 +147,8 @@ class TasksController < ApplicationController
           active = Project.active.joins(:team).merge(Team.active).where(team_id: team_ids)
           current = Project.where(id: @task.persisted? ? @task.project_id : nil, team_id: team_ids)
           @projects = (active.includes(:team).to_a | current.includes(:team).to_a).sort_by(&:full_name)
-          existing = User.where(id: @task.assignee_ids).in_teams(team_ids)
-          @assignees = (User.assignable.in_teams(team_ids).includes(membership: :subteam).to_a | existing.includes(membership: :subteam).to_a).sort_by { |person| [ person.name, person.id ] }
+          existing = User.where(id: @task.assignee_ids)
+          @assignees = (User.task_candidates(team_ids, actor: current_user).includes(membership: :subteam).to_a | existing.includes(membership: :subteam).to_a).sort_by { |person| [ person.name, person.id ] }
           @prerequisites = Task.accessible_to(current_user).in_active_projects.where.not(id: @task.id).includes(:project).order(:title, :id)
           submitted = params[:task]
           @selected_assignee_ids = submitted&.key?(:assignee_ids) ? Array(task_params[:assignee_ids]).map(&:to_i) : @task.assignee_ids

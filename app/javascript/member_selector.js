@@ -46,7 +46,7 @@ export function initializeMemberSelectors(root = document) {
     };
     const render = () => {
       const query = input.value.trim().toLocaleLowerCase();
-      visible = options.filter(option => option.dataset.teamId === teamId() && option.textContent.toLocaleLowerCase().includes(query));
+      visible = options.filter(option => teamId() && (option.dataset.allTeams === "true" || option.dataset.teamId === teamId()) && option.textContent.toLocaleLowerCase().includes(query));
       list.replaceChildren();
       activeIndex = -1;
       input.removeAttribute("aria-activedescendant");

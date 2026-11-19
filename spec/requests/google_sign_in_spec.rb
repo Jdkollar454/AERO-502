@@ -144,6 +144,15 @@ RSpec.describe "Google sign-in", type: :request do
           expect(response.body).to include("Access not authorized")
      end
 
+     it "refuses Google sign-in for a person removed from the directory" do
+          sign_in(users(:chief))
+          delete user_path(users(:member))
+          delete logout_path
+          google_sign_in(users(:member).email)
+          expect(response).to redirect_to(login_path)
+          expect(flash[:alert]).to include("Access not authorized")
+     end
+
      it "lets the Chief Engineer remove and restore a person's access from the People screen" do
           sign_in(users(:chief))
 

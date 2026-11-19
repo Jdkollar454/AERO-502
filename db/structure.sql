@@ -1,11 +1,3 @@
---
--- PostgreSQL database dump
---
-
-
--- Dumped from database version 18.6
--- Dumped by pg_dump version 18.6
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -16,20 +8,6 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
-
---
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
---
-
-CREATE SCHEMA IF NOT EXISTS public;
-
-
---
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON SCHEMA public IS 'standard public schema';
-
 
 --
 -- Name: aero_guard_assignment_history(); Type: FUNCTION; Schema: public; Owner: -
@@ -112,9 +90,10 @@ BEGIN
      ) THEN RAISE EXCEPTION 'Members and officers require exactly one subteam; administrators require none.' USING ERRCODE = '23514'; END IF;
      IF EXISTS (
           SELECT 1 FROM task_assignments a JOIN tasks t ON t.id = a.task_id
-          JOIN projects p ON p.id = t.project_id LEFT JOIN memberships m ON m.user_id = a.user_id
+          JOIN projects p ON p.id = t.project_id JOIN users u ON u.id = a.user_id
+          LEFT JOIN memberships m ON m.user_id = a.user_id
           LEFT JOIN subteams s ON s.id = m.subteam_id
-          WHERE a.unassigned_at IS NULL AND (m.user_id IS NULL OR s.team_id <> p.team_id)
+          WHERE a.unassigned_at IS NULL AND u.role <> 2 AND (m.user_id IS NULL OR s.team_id <> p.team_id)
      ) THEN RAISE EXCEPTION 'An active assignee must belong to the project team; resolve assignments before transferring ownership.' USING ERRCODE = '23514'; END IF;
      IF EXISTS (
           SELECT 1 FROM tasks t LEFT JOIN LATERAL (
@@ -456,7 +435,8 @@ CREATE TABLE public.users (
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     access_revoked_at timestamp(6) without time zone,
-    role integer DEFAULT 0 CONSTRAINT users_role_not_null1 NOT NULL,
+    role integer DEFAULT 0 NOT NULL,
+    removed_at timestamp(6) without time zone,
     CONSTRAINT approved_user_roles CHECK ((role = ANY (ARRAY[0, 1, 2])))
 );
 
@@ -773,6 +753,13 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 
 
 --
+-- Name: index_users_on_removed_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_removed_at ON public.users USING btree (removed_at);
+
+
+--
 -- Name: one_active_assignment; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1058,21 +1045,25 @@ ALTER TABLE ONLY public.projects
 -- PostgreSQL database dump complete
 --
 
+SET search_path TO "$user", public;
 
+INSERT INTO "schema_migrations" (version) VALUES
+('20261119121000'),
+('20261119120000'),
+('20261102000000'),
+('20261023121000'),
+('20261023120000'),
+('20261007170000'),
+('20261007160000'),
+('20261007150000'),
+('20261007140000'),
+('20261007130000'),
+('20261007120000'),
+('20260927224361'),
+('20260927224360'),
+('20260927224359'),
+('20260927224358'),
+('20260927224357'),
+('20260927224356'),
+('20260927224355');
 
-INSERT INTO public.schema_migrations (version) VALUES ('20260927224355');
-INSERT INTO public.schema_migrations (version) VALUES ('20260927224356');
-INSERT INTO public.schema_migrations (version) VALUES ('20260927224357');
-INSERT INTO public.schema_migrations (version) VALUES ('20260927224358');
-INSERT INTO public.schema_migrations (version) VALUES ('20260927224359');
-INSERT INTO public.schema_migrations (version) VALUES ('20260927224360');
-INSERT INTO public.schema_migrations (version) VALUES ('20260927224361');
-INSERT INTO public.schema_migrations (version) VALUES ('20261007120000');
-INSERT INTO public.schema_migrations (version) VALUES ('20261007130000');
-INSERT INTO public.schema_migrations (version) VALUES ('20261007140000');
-INSERT INTO public.schema_migrations (version) VALUES ('20261007150000');
-INSERT INTO public.schema_migrations (version) VALUES ('20261007160000');
-INSERT INTO public.schema_migrations (version) VALUES ('20261007170000');
-INSERT INTO public.schema_migrations (version) VALUES ('20261023120000');
-INSERT INTO public.schema_migrations (version) VALUES ('20261023121000');
-INSERT INTO public.schema_migrations (version) VALUES ('20261102000000');

@@ -437,7 +437,9 @@ CREATE TABLE public.users (
     access_revoked_at timestamp(6) without time zone,
     role integer DEFAULT 0 NOT NULL,
     removed_at timestamp(6) without time zone,
-    CONSTRAINT approved_user_roles CHECK ((role = ANY (ARRAY[0, 1, 2])))
+    permanently_removed_at timestamp(6) without time zone,
+    CONSTRAINT approved_user_roles CHECK ((role = ANY (ARRAY[0, 1, 2]))),
+    CONSTRAINT permanently_removed_users_cannot_sign_in CHECK (((permanently_removed_at IS NULL) OR ((removed_at IS NOT NULL) AND (access_revoked_at IS NOT NULL) AND (password_digest IS NULL))))
 );
 
 
@@ -753,6 +755,13 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 
 
 --
+-- Name: index_users_on_permanently_removed_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_users_on_permanently_removed_at ON public.users USING btree (permanently_removed_at);
+
+
+--
 -- Name: index_users_on_removed_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1048,6 +1057,7 @@ ALTER TABLE ONLY public.projects
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20261119180000'),
 ('20261119121000'),
 ('20261119120000'),
 ('20261102000000'),

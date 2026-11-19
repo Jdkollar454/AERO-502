@@ -58,8 +58,9 @@ Only approved people in **Current people** whose access has not been restricted 
 5. To let a restricted person back in, select **Restore access**. They can use their approved Google account again.
 6. To remove someone who has left the club from the current list, select **Remove person**, review the confirmation, and confirm. Sign-in is blocked but their account, assignments, hours and task history remain.
 7. For a returning member, open **Removed people**, search for them and select **Restore person**. This returns the same account to the current list and restores access. Check this list before adding someone whose email is already taken.
+8. To clear someone from **Removed people** permanently, select **Permanently remove**, read the explanation, type their full name exactly as shown, and confirm. They disappear from both People lists and the subteam roster and cannot be restored. Their email and sign-in credentials are erased; their name, assignments, hours and task history remain for attribution and reports. If they rejoin, use **Add person** with their original email to create a separate account; previous work remains with the original record. Use **Cancel** to leave the removed account restorable.
 
-Officers and members have no People navigation or access-management controls. Direct requests to People or its add, edit, remove and restore actions are denied by the server. Google supplies proof of email ownership; the application's saved role, class and subteam determine access.
+Officers and members have no People navigation or access-management controls. Direct requests to People or its add, edit, remove, permanently remove and restore actions are denied by the server. Google supplies proof of email ownership; the application's saved role, class and subteam determine access.
 
 If sign-in is denied, compare the selected Google email with the saved People entry and check whether it says **Access removed**. Choose the approved Google account or restore access as appropriate. A rejected or cancelled Google sign-in ends the previous application session; selecting an approved account starts a new one.
 

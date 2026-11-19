@@ -29,7 +29,7 @@
 <section class="panel">
   <p role="status"><%= pluralize(@total, "person", "people") %><%= " matching “#{@query}”" if @query.present? %> · Page <%= @page %> of <%= @pages %></p>
   <% if @view == "removed" %>
-    <p class="muted">These people cannot sign in. Their contributions are kept; restoring a person returns them to the current list and restores sign-in access.</p>
+    <p class="muted">These people cannot sign in. Restore a returning person, or permanently remove them from both lists while keeping their contributions.</p>
   <% end %>
   <% if @users.empty? %>
     <p class="empty-state">No people found<%= " for this search" if @query.present? %>.</p>
@@ -58,6 +58,7 @@
                 <div class="row-actions">
                   <% if user.removed? %>
                     <%= button_to "Restore person", restore_user_path(user), method: :patch, class: "link-button", aria: { label: "Restore person #{user.name}" } %>
+                    <%= link_to "Permanently remove", permanent_removal_user_path(user), aria: { label: "Permanently remove #{user.name}" } %>
                   <% else %>
                     <%= link_to "Change role", edit_user_path(user), aria: { label: "Change role for #{user.name}" } %>
                     <% if user.access_revoked? %>

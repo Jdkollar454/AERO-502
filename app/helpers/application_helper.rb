@@ -1,7 +1,7 @@
 module ApplicationHelper
      def task_filter_people
           team_ids = current_user.chief_engineer? ? Team.select(:id) : [ current_user.team_id ]
-          team_people = User.in_teams(team_ids).select(:id)
+          team_people = User.directory.in_teams(team_ids).select(:id)
           contributors = TaskAssignment.where(task_id: Task.accessible_to(current_user).select(:id)).select(:user_id)
           User.where(id: team_people).or(User.where(id: contributors)).order(:name, :id)
      end

@@ -56,6 +56,36 @@ RSpec.describe "Club administration updates", type: :system do
           expect(users(:member).time_entries.sum(:hours)).to eq(2.5)
      end
 
+     it "confirms permanent removal in the browser and keeps the person's work" do
+          users(:member).update!(removed_at: Time.current, access_revoked_at: Time.current)
+          sign_in_chief
+          click_link "People", exact: true
+          click_link "Removed people", exact: true
+          click_link "Permanently remove", exact: true
+          expect(page).to have_text("This cannot be undone.")
+          click_link "Cancel", exact: true
+          expect(page).to have_css("tbody th", text: "Morgan Member")
+          click_link "Permanently remove", exact: true
+          fill_in "Type their full name to confirm", with: "Wrong name"
+          click_button "Permanently remove", exact: true
+          expect(page).to have_text("must match the person's name exactly")
+          expect(users(:member).reload).not_to be_permanently_removed
+          visit permanent_removal_user_path(users(:member))
+          fill_in "Type their full name to confirm", with: users(:member).name
+          click_button "Dark mode", exact: true unless page.has_css?('html[data-theme="dark"]', wait: 0)
+          expect(page).to have_css('html[data-theme="dark"]')
+          page.save_screenshot(Rails.root.join("tmp/screenshots/permanent_removal_dark.png"))
+          page.driver.browser.manage.window.resize_to(390, 844)
+          expect(page.evaluate_script("document.documentElement.scrollWidth <= innerWidth + 1")).to be(true)
+          page.save_screenshot(Rails.root.join("tmp/screenshots/permanent_removal_mobile.png"))
+          click_button "Permanently remove", exact: true
+          expect(page).to have_text("Their contributions are kept, but their account cannot be restored.")
+          expect(page).not_to have_css("tbody th", text: "Morgan Member")
+          visit task_path(tasks(:wing_test))
+          expect(page).to have_text("Morgan Member")
+          expect(page).to have_text("2.5 hours")
+     end
+
      it "follows the device theme and remembers manual choices across navigation and reloads" do
           visit login_path
           page.execute_script("localStorage.removeItem('aero-theme')")

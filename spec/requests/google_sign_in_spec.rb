@@ -166,6 +166,20 @@ RSpec.describe "Google sign-in", type: :request do
           expect(users(:member).reload.access_revoked_at).to be_nil
      end
 
+     it "refuses Google sign-in after permanent removal, including the former email" do
+          person = users(:member)
+          old_email = person.email
+          sign_in(users(:chief))
+          delete user_path(person)
+          delete permanently_remove_user_path(person), params: { confirmation_name: person.name }
+          delete logout_path
+          [ old_email, person.reload.email ].each do |email|
+               google_sign_in(email)
+               expect(response).to redirect_to(login_path)
+               expect(flash[:alert]).to include("Access not authorized")
+          end
+     end
+
      it "rejects an open task action after a chief revokes access in another session, preserving past work" do
           member = users(:member)
           task = tasks(:wing_test)

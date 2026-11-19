@@ -15,7 +15,8 @@ class User < ApplicationRecord
 
      scope :in_teams, ->(ids) { joins(membership: :subteam).where(subteams: { team_id: ids }) }
      scope :in_subteam, ->(id) { joins(:membership).where(memberships: { subteam_id: id }) }
-     scope :listed, -> { where(removed_at: nil) }
+     scope :directory, -> { where(permanently_removed_at: nil) }
+     scope :listed, -> { directory.where(removed_at: nil) }
      scope :allowed_to_sign_in, -> { listed.where(access_revoked_at: nil) }
      scope :assignable, -> { allowed_to_sign_in.where(role: [ :member, :officer ]).joins(:membership) }
 
@@ -30,6 +31,7 @@ class User < ApplicationRecord
 
      before_validation :normalize_email
      validate :preserve_last_active_chief_engineer
+     validate :preserve_permanent_removal
      validates :name, presence: true
      validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: URI::MailTo::EMAIL_REGEXP }
      validate :membership_matches_role
@@ -83,11 +85,37 @@ class User < ApplicationRecord
      end
 
      def access_revoked?
-          access_revoked_at.present? || removed?
+          access_revoked_at.present? || removed? || permanently_removed?
      end
 
      def removed?
           removed_at.present?
+     end
+
+     def permanently_removed?
+          permanently_removed_at.present?
+     end
+
+     # Retain attribution and foreign keys, but erase credentials and directory access.
+     def permanently_remove(confirmation_name:)
+          with_access_lock do
+               errors.clear
+               if permanently_removed?
+                    errors.add(:base, "This person was permanently removed and cannot be restored.")
+               elsif !removed?
+                    errors.add(:base, "Move this person to Removed people before permanently removing them.")
+               elsif confirmation_name.to_s != name
+                    errors.add(:confirmation_name, "must match the person's name exactly")
+               else
+                    next update(permanently_removed_at: Time.current, access_revoked_at: access_revoked_at || Time.current,
+                                email: "removed-#{id}-#{SecureRandom.uuid}@example.invalid", password_digest: nil)
+               end
+               false
+          end
+     end
+
+     def restore_access
+          with_access_lock { update(access_revoked_at: nil, removed_at: nil) }
      end
 
      def authenticate_password_sign_in(password)
@@ -107,6 +135,22 @@ class User < ApplicationRecord
      end
 
      private
+
+     # Use the same lock order as membership changes, then reload to reject stale forms.
+     def with_access_lock
+          self.class.transaction do
+               self.class.connection.execute("SELECT pg_advisory_xact_lock(5023001)")
+               lock!
+               yield
+          end
+     end
+
+     def preserve_permanent_removal
+          return unless permanently_removed_at_in_database.present?
+          return if (changes_to_save.keys - [ "updated_at" ]).empty?
+
+          errors.add(:base, "This person was permanently removed and cannot be changed or restored.")
+     end
 
      def membership_matches_role
           if chief_engineer?

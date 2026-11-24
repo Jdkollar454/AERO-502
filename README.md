@@ -90,7 +90,7 @@ This code has been run and tested with:
 
 | Component | Version |
 | --- | --- |
-| Ruby | 4.0.6 (see `.ruby-version`) |
+| Ruby | 4.0.10 (see `.ruby-version`) |
 | Rails | 8.1.4 |
 | PostgreSQL | 16 in CI; the deployed Heroku database reports 18.4 |
 | Bundler | 4.0.16 |
@@ -103,7 +103,7 @@ No Node.js or Yarn is needed: JavaScript is loaded with import maps.
 | Dependency | Purpose | Download |
 | --- | --- | --- |
 | Git | Getting and updating the code | https://git-scm.com/downloads |
-| Ruby 4.0.6 | Runs the application | https://www.ruby-lang.org/en/downloads/ |
+| Ruby 4.0.10 | Runs the application | https://www.ruby-lang.org/en/downloads/ |
 | PostgreSQL | Database | https://www.postgresql.org/download/ |
 | Heroku CLI | Deploying and managing the live website | https://devcenter.heroku.com/articles/heroku-cli |
 | Google Cloud Console | Google sign-in credentials | https://console.cloud.google.com/auth/clients |
@@ -169,7 +169,7 @@ If the website address ever changes (for example a new Heroku app name or a cust
 
 ## Installation and Setup
 
-1. Install Git, Ruby 4.0.6 and PostgreSQL (see [External Dependencies](#external-dependencies)), and make sure PostgreSQL is running.
+1. Install Git, Ruby 4.0.10 and PostgreSQL (see [External Dependencies](#external-dependencies)), and make sure PostgreSQL is running.
 2. Get the code:
 
    ```bash

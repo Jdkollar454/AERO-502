@@ -1,14 +1,14 @@
 # Security check on the deployed release
 
-Run by Joshua Eng on November 23, 2026 (Texas time) against the customer's production app `aero-task-hub`, release v30, commit `9faa5b9`. Commands were run with Claude Code. No production record was changed: the logged-out requests carry no session and are refused before anything is saved, and the signed-in run blocks every database write. This replaces the November 17 check of release v27, because release v30 changed who can be assigned to a task and how people are removed.
+Run by Joshua Eng on November 23, 2026 (Texas time) against the customer's production app `aero-task-hub`, release v33, commit `b236771`. Commands were run with Claude Code. No production record was changed: the logged-out requests carry no session and are refused before anything is saved, and the signed-in run blocks every database write. This replaces the November 17 check of release v27 and the earlier November 23 check of release v30: release v30 changed who can be assigned to a task and how people are removed, and release v33 records removal in the single access_revoked_at column.
 
-Automated tests for the same rules, all passing in [CI run 45305381239](https://github.com/joshEng1/AERO-502/actions/runs/45305381239/job/138147842394): [Google sign-in](https://github.com/joshEng1/AERO-502/blob/9faa5b95983ce2bf371e95ad6073fc80e11e0316/spec/requests/google_sign_in_spec.rb), [role access](https://github.com/joshEng1/AERO-502/blob/9faa5b95983ce2bf371e95ad6073fc80e11e0316/spec/requests/role_access_spec.rb), [hours ownership](https://github.com/joshEng1/AERO-502/blob/9faa5b95983ce2bf371e95ad6073fc80e11e0316/spec/requests/time_entry_management_spec.rb), [administrator handover](https://github.com/joshEng1/AERO-502/blob/9faa5b95983ce2bf371e95ad6073fc80e11e0316/spec/requests/administrator_handover_spec.rb), [removing people](https://github.com/joshEng1/AERO-502/blob/9faa5b95983ce2bf371e95ad6073fc80e11e0316/spec/requests/permanent_people_removal_spec.rb), [Chief Engineer self-assignment](https://github.com/joshEng1/AERO-502/blob/9faa5b95983ce2bf371e95ad6073fc80e11e0316/spec/requests/chief_self_assignment_spec.rb).
+Automated tests for the same rules, all passing in [CI run 45335416273](https://github.com/joshEng1/AERO-502/actions/runs/45335416273/job/138246229143): [Google sign-in](https://github.com/joshEng1/AERO-502/blob/b236771a5fb0ee9ecd953d9140ca025ec07236d5/spec/requests/google_sign_in_spec.rb), [role access](https://github.com/joshEng1/AERO-502/blob/b236771a5fb0ee9ecd953d9140ca025ec07236d5/spec/requests/role_access_spec.rb), [hours ownership](https://github.com/joshEng1/AERO-502/blob/b236771a5fb0ee9ecd953d9140ca025ec07236d5/spec/requests/time_entry_management_spec.rb), [administrator handover](https://github.com/joshEng1/AERO-502/blob/b236771a5fb0ee9ecd953d9140ca025ec07236d5/spec/requests/administrator_handover_spec.rb), [removing people](https://github.com/joshEng1/AERO-502/blob/b236771a5fb0ee9ecd953d9140ca025ec07236d5/spec/requests/permanent_people_removal_spec.rb), [Chief Engineer self-assignment](https://github.com/joshEng1/AERO-502/blob/b236771a5fb0ee9ecd953d9140ca025ec07236d5/spec/requests/chief_self_assignment_spec.rb).
 
 ## Summary
 
 | Check | Result |
 | --- | --- |
-| 1. Third-party (Google) sign-in works | **Pass.** A real Google sign-in on production succeeded on November 23 on release v30 (server log below) |
+| 1. Third-party (Google) sign-in works | **Pass.** A real Google sign-in on production succeeded on November 23 on release v30 (server log below). Release v33 did not change the sign-in route; its sign-in rules are covered by the 57 requests in section 3 and by the automated Google sign-in tests |
 | 2. Logged-out visitors cannot read or change protected information | **Pass.** 18 protected pages redirect to the sign-in page; 9 change requests are refused |
 | 3. A wrong role cannot read or change protected information | **Pass.** Member and officer were refused on every page and change reserved for another role, including removing and permanently removing a person |
 | 4. Two accounts: changing the record number in the address does not expose, edit or delete another person's records | **Pass.** Member A was refused viewing, editing and deleting member B's hours entry and an unassigned task, and refused removing member B; the records were unchanged |
@@ -33,7 +33,7 @@ Refused sign-ins are in section 3 (rows 1 and 2): an email that is not on the Pe
 
 ## 2. Logged-out requests
 
-Sent with `curl` and no cookies on 2026-11-24 02:10 UTC (November 23, 8:10 p.m. CST).
+Sent with `curl` and no cookies on 2026-11-24 05:51 UTC (November 23, 11:51 p.m. CST), on release v33.
 
 | Request | Response |
 | --- | --- |
@@ -45,7 +45,7 @@ Sent with `curl` and no cookies on 2026-11-24 02:10 UTC (November 23, 8:10 p.m. 
 
 ## 3. Signed-in requests by role, including the two-account check
 
-How it was run: a one-off process on the production app (`heroku run bin/rails runner`) sent each request through the deployed application code and the production database. Each account was signed in through the app's own Google callback with Google's answer simulated for that account in that process only; Google's own screen was not used here (section 1 covers the real one). `ActiveRecord::Base.while_preventing_writes` blocked every database write for the whole run. Run at 2026-11-24 02:07 UTC (November 23, 8:07 p.m. CST).
+How it was run: a one-off process on the production app (`heroku run bin/rails runner`) sent each request through the deployed application code and the production database. Each account was signed in through the app's own Google callback with Google's answer simulated for that account in that process only; Google's own screen was not used here (section 1 covers the real one). `ActiveRecord::Base.while_preventing_writes` blocked every database write for the whole run. Run at 2026-11-24 05:50 UTC (November 23, 11:50 p.m. CST), on release v33.
 
 Accounts and records, by number only:
 

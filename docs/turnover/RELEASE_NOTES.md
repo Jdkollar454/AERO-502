@@ -1,12 +1,12 @@
 # Release notes
 
-## Final release: Heroku v30, November 23, 2026
+## Final release: Heroku v33, November 23, 2026
 
 - **App:** AERO Task Hub, https://aero-task-hub-b5f4953964ed.herokuapp.com/
-- **Commit:** [`9faa5b9`](https://github.com/joshEng1/AERO-502/commit/9faa5b95983ce2bf371e95ad6073fc80e11e0316) on `main`
-- **Checks:** [CI run 45305381239](https://github.com/joshEng1/AERO-502/actions/runs/45305381239), 297 tests, 0 failures; style and both security scans passed
+- **Commit:** [`b236771`](https://github.com/joshEng1/AERO-502/commit/b236771a5fb0ee9ecd953d9140ca025ec07236d5) on `main`
+- **Checks:** [CI run 45335416273](https://github.com/joshEng1/AERO-502/actions/runs/45335416273), 297 tests, 0 failures; style and both security scans passed
 - **Verification:** [final release verification](FINAL_RELEASE_VERIFICATION.md), [cumulative test results](TEST_RESULTS.md), [security check](SECURITY_CHECK.md)
-- **Database:** three migrations since v27, 19 applied in total; `users` gained `removed_at` and `permanently_removed_at`
+- **Database:** four migrations since v27, 20 applied in total; `users` gained `permanently_removed_at`
 - **Runtime:** Ruby 4.0.10, Rails 8.1.4.1
 
 The documentation commit that adds these records and the corrected guides to `main` follows this release and changes no application code.
@@ -16,13 +16,14 @@ The documentation commit that adds these records and the corrected guides to `ma
 | Change | Source | Release |
 | --- | --- | --- |
 | **A Chief Engineer can be assigned to a task**, including by assigning themselves, without a subteam membership. They see the work under My Tasks and can log hours on it. Customer request C01. | [Pull request #51](https://github.com/joshEng1/AERO-502/pull/51) | v28 |
-| **Former members can be removed from the People list.** People has two lists, Current people and Removed people. **Restrict access** blocks sign-in and keeps the person listed; **Remove person** moves them to Removed people; **Restore person** brings the same account back. Customer request C02. | [Pull request #51](https://github.com/joshEng1/AERO-502/pull/51) | v28 |
+| **Former members can be removed from the People list.** People has two lists, Current people and Removed people. **Remove person** blocks sign-in and moves the person to Removed people; **Restore person** brings the same account back. Customer request C02. | [Pull request #51](https://github.com/joshEng1/AERO-502/pull/51) | v28 |
 | **Permanently remove** clears a removed person from both lists after the Chief Engineer types their full name. Their email and sign-in details are erased; their name stays on their assignments, hours and history. It cannot be undone. | [Pull request #51](https://github.com/joshEng1/AERO-502/pull/51) | v29 |
 | The People list has search and shows 25 people per page. | [Pull request #51](https://github.com/joshEng1/AERO-502/pull/51) | v28 |
 | A **Dark mode** switch in the page header; the choice is remembered in the browser. | [Pull request #51](https://github.com/joshEng1/AERO-502/pull/51) | v28 |
 | Ruby 4.0.6 to 4.0.10, Rails 8.1.4 to 8.1.4.1 and Brakeman 8.1.0 to 8.1.1, after the security scan reported a critical vulnerability in Ruby 4.0.6. | [Commit `1d4a71a`](https://github.com/joshEng1/AERO-502/commit/1d4a71a4a18bb01cde55c60848938cbee6308b65) | v30 |
+| Removing a person is recorded in the approved `access_revoked_at` column. The separate `removed_at` column and the **Restrict access** button are gone: blocking someone's sign-in always moves them to Removed people. | [Pull request #58](https://github.com/joshEng1/AERO-502/pull/58) | v33 |
 
-Releases v28 and v29 were deployed from the feature branch on November 19 before review or CI. Release v30 is the same code after pull request #51 and a passing CI run; see [the final release verification](FINAL_RELEASE_VERIFICATION.md).
+Releases v28 and v29 were deployed from the feature branch on November 19 before a pull request or CI. Release v30 is the same code after pull request #51 and a passing CI run; v31 and v32 added records and guides only; see [the final release verification](FINAL_RELEASE_VERIFICATION.md).
 
 ### What the release contains
 

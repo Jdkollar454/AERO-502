@@ -12,7 +12,7 @@ RSpec.describe "Administration guide" do
      it "D4.7: explains approving a person, changing their role and removing access on the People screen" do
           steps = section("People and access")
 
-          expect(steps).to include("Add person", "Change role", "Remove access", "Restore access")
+          expect(steps).to include("Add person", "Change role", "Restrict access", "Restore access", "Remove person", "Restore person", "Permanently remove")
           expect(steps).to match(/^1\. /)
      end
 

@@ -14,7 +14,7 @@ class ReportCsv
 
      def self.members(report, project_name: "All selected projects")
           generate(MEMBER_HEADERS, report.hours.member_rows.map do |row|
-               [ row.member.name, row.member.team.name, row.member.subteam.name,
+               [ row.member.name, row.member.team&.name || "All teams", row.member.subteam&.name || "Chief Engineer",
                  project_name, row.actual.to_s("F") ]
           end)
      end

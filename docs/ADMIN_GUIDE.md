@@ -41,7 +41,7 @@ Do this once, signed in to the organization's Google account. Use the Google Clo
 3. Under Google Auth Platform → Clients, create an OAuth client of type Web application.
 4. Add an authorized redirect URI for each website: `https://WEBSITE_ADDRESS/auth/google_oauth2/callback` for the live and practice websites, and `http://localhost:3000/auth/google_oauth2/callback` for developers. Changes can take a few minutes to apply.
 5. Copy the client ID and secret into the Heroku Config Vars `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` on each website. Google shows a new secret only once; if it is lost, open the client, select **Add secret**, and replace the Config Var.
-6. If nobody can sign in as Chief Engineer yet, add the first ones: `heroku run "bin/rails users:grant_chief_engineer EMAILS=first@tamu.edu,second@tamu.edu" -a APP_NAME`. It adds each email as a Chief Engineer, or promotes an existing person after their incompatible active task assignments have been resolved. Re-running it preserves the account. Add everyone else under People.
+6. If nobody can sign in as Chief Engineer yet, add the first ones: `heroku run "bin/rails users:grant_chief_engineer EMAILS=first@tamu.edu,second@tamu.edu" -a APP_NAME`. It adds each email as a Chief Engineer, or promotes an existing person while preserving their assignments. Re-running it preserves the account. Add everyone else under People.
 7. Open the website and select **Sign in with Google** with an account already added under People. Choose the approved TAMU account in Google's account selector; no separate application password or password reset is needed.
 8. Before turning off practice passwords, check approved Google sign-in for a Chief Engineer, an officer and a member on the deployed website. Confirm their assigned role, class (team) and subteam are unchanged. Also check an unlisted account is denied without showing project information. Automated tests mock Google; they do not prove that the deployed OAuth credentials and audience are configured correctly.
 
@@ -49,15 +49,18 @@ Official references: [Google Auth Platform audience](https://support.google.com/
 
 ## People and access
 
-Only people listed under **People** can sign in. Only the Chief Engineer can open this screen.
+Only approved people in **Current people** whose access has not been restricted can sign in. Only the Chief Engineer can open this screen.
 
-1. Sign in as the Chief Engineer and select **People**.
+1. Sign in as the Chief Engineer and select **People**. Search by name or email; results are shown 25 per page. **Next** and **Previous** retain the search.
 2. To approve a person, select **Add person**, enter their name and Google (TAMU) email, choose their role and Class · Subteam membership, and select **Add person** to save. They can sign in with Google immediately, without a separate password or invitation. Email matching ignores capitalization; adding `JDoe@tamu.edu` also approves `jdoe@tamu.edu`. Class is derived from the selected subteam. Members and officers require exactly one membership; Chief Engineers have none.
 3. To change a person's role, team or subteam, select **Change role** next to their name, make the change and select **Save role**. It takes effect the next time they load a page.
-4. To remove a person's access, select **Remove access** next to their name. They are signed out at their next page load or submitted action, including a form they opened before removal, and cannot sign in. Their saved tasks, assignments and hours are kept; do not delete their records to remove access.
-5. To let them back in, select **Restore access**. They can use their approved Google account again.
+4. To remove a person's access, select **Restrict access** next to their name. They are signed out at their next page load or submitted action, including a form they opened before removal, and cannot sign in. Their saved tasks, assignments and hours are kept; do not delete their records to remove access.
+5. To let a restricted person back in, select **Restore access**. They can use their approved Google account again.
+6. To remove someone who has left the club from the current list, select **Remove person**, review the confirmation, and confirm. Sign-in is blocked but their account, assignments, hours and task history remain.
+7. For a returning member, open **Removed people**, search for them and select **Restore person**. This returns the same account to the current list and restores access. Check this list before adding someone whose email is already taken.
+8. To clear someone from **Removed people** permanently, select **Permanently remove**, read the explanation, type their full name exactly as shown, and confirm. They disappear from both People lists and the subteam roster and cannot be restored. Their email and sign-in credentials are erased; their name, assignments, hours and task history remain for attribution and reports. If they rejoin, use **Add person** with their original email to create a separate account; previous work remains with the original record. Use **Cancel** to leave the removed account restorable.
 
-Officers and members have no People navigation or access-management controls. Direct requests to People or its add, edit, remove and restore actions are denied by the server. Google supplies proof of email ownership; the application's saved role, class and subteam determine access.
+Officers and members have no People navigation or access-management controls. Direct requests to People or its add, edit, remove, permanently remove and restore actions are denied by the server. Google supplies proof of email ownership; the application's saved role, class and subteam determine access.
 
 If sign-in is denied, compare the selected Google email with the saved People entry and check whether it says **Access removed**. Choose the approved Google account or restore access as appropriate. A rejected or cancelled Google sign-in ends the previous application session; selecting an approved account starts a new one.
 
@@ -65,7 +68,7 @@ The website blocks changing the last active Chief Engineer to another role or re
 
 ### Semester handover
 
-1. The outgoing Chief Engineer adds each incoming chief under People, or first resolves their active assignments and changes their role to Chief Engineer with no membership.
+1. The outgoing Chief Engineer adds each incoming chief under People, or changes their role to Chief Engineer with no membership while keeping their assignments.
 2. The incoming chief signs in and confirms they can open People.
 3. The incoming chief removes access for, or changes the role of, outgoing leaders.
 
@@ -95,7 +98,7 @@ Officers manage subteams and projects throughout their own class; Chief Engineer
 
 1. Open a subteam's **Subteam roster**. All members and officers appear, including people with no tasks or hours.
 2. Use **Transfer to roster** to move an approved person from another subteam in this class, or select a destination and **Transfer membership** beside their name. The membership changes atomically; no intermediate membership removal is needed.
-3. Accounts, assignment periods, task IDs, status history and hours remain. A member or officer must have exactly one membership, while an administrator has none. Resolve incompatible active assignments before a cross-class move or administrator promotion.
+3. Accounts, assignment periods, task IDs, status history and hours remain. A member or officer must have exactly one membership, while an administrator has none. Chief Engineers may assign themselves across classes. Resolve incompatible active assignments before a cross-class move or a chief changes to a member/officer role.
 4. Filter by project and worked dates. A zero means no recorded hours in that scope, not that the person is available.
 5. Download task, timeline, member-hour or project-hour CSVs using the same authorized filters. Class appears once. Shared task estimates and time entries are not multiplied by the number of assignees.
 

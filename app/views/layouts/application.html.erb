@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#5b1831">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= javascript_include_tag "theme", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
@@ -39,6 +40,7 @@
           <%= button_to "Sign out", logout_path, method: :delete, class: "link-button" %>
         </div>
       <% end %>
+      <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false" hidden>Dark mode</button>
     </header>
 
     <main id="main-content" class="page-shell">

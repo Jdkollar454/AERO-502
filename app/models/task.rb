@@ -80,9 +80,9 @@ class Task < ApplicationRecord
           ids = Array(user_ids).reject(&:blank?).map(&:to_i).uniq
           # Revoking access retains existing assignments. Keeping one in an
           # unrelated edit must not silently end its historical period.
-          eligible = (User.assignable.in_teams(team_id).where(id: ids).pluck(:id) + active_assignments.where(user_id: ids).pluck(:user_id)).uniq
+          eligible = (User.task_candidates(team_id, actor: actor).where(id: ids).pluck(:id) + active_assignments.where(user_id: ids).pluck(:user_id)).uniq
           unless ids.sort == eligible.sort && actor.can_manage?(self)
-               errors.add(:assignees, "must be eligible members of this project's team")
+               errors.add(:assignees, "must be eligible members of this project's team or the Chief Engineer assigning themselves")
                raise ActiveRecord::RecordInvalid, self
           end
           self.class.transaction do

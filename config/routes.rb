@@ -15,8 +15,11 @@ Rails.application.routes.draw do
      get "help", to: "help#show"
      get "help/restart", to: "help#restart", as: :restart_guide
 
-     resources :users, only: %i[index new create edit update] do
+     resources :users, only: %i[index new create edit update destroy] do
           member do
+               get :removal
+               get :permanent_removal
+               delete :permanently_remove
                patch :revoke
                patch :restore
           end

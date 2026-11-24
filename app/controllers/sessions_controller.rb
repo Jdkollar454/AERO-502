@@ -49,7 +49,7 @@ class SessionsController < ApplicationController
      private
 
      def allowed_user(email)
-          User.find_by(email: email.to_s.strip.downcase, access_revoked_at: nil)
+          User.allowed_to_sign_in.find_by(email: email.to_s.strip.downcase)
      end
 
      def start_session(user)

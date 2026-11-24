@@ -51,6 +51,9 @@ The website checks these rules on the server as well as hiding buttons, so typin
 ## Features
 
 - **Google sign-in with an approved-people list.** The Chief Engineer adds each person's TAMU email and role on the **People** page. Removing someone's access keeps their past tasks and hours.
+- **Searchable People directory.** Search names or emails, browse 25 people per page, restrict access, or remove departing members while retaining their assignments, hours and history. Restore returning members from **Removed people**, or choose **Permanently remove** and confirm their name to clear their account from both lists. Permanent removal erases sign-in details and prevents restoration while retaining named contribution history.
+- **Chief Engineer self-assignment.** Chiefs can select their own name on task forms for any team, use **My Tasks**, and record hours that appear in reports.
+- **Dark mode.** A header toggle follows the device preference initially and remembers the choice in this browser.
 - **Task board.** Backlog, In Progress and Completed columns with counts, overdue labels, and search and filters by class, subteam, project and member.
 - **Searchable Member filter.** Browse or type a partial name on the board and timeline; the selected member ID and other filters are retained.
 - **Searchable assignee picker.** Type part of a name to find and assign members, even with 80+ people. Only members of the project's class are offered.
@@ -87,7 +90,7 @@ This code has been run and tested with:
 
 | Component | Version |
 | --- | --- |
-| Ruby | 4.0.6 (see `.ruby-version`) |
+| Ruby | 4.0.10 (see `.ruby-version`) |
 | Rails | 8.1.4 |
 | PostgreSQL | 16 in CI; the deployed Heroku database reports 18.4 |
 | Bundler | 4.0.16 |
@@ -100,7 +103,7 @@ No Node.js or Yarn is needed: JavaScript is loaded with import maps.
 | Dependency | Purpose | Download |
 | --- | --- | --- |
 | Git | Getting and updating the code | https://git-scm.com/downloads |
-| Ruby 4.0.6 | Runs the application | https://www.ruby-lang.org/en/downloads/ |
+| Ruby 4.0.10 | Runs the application | https://www.ruby-lang.org/en/downloads/ |
 | PostgreSQL | Database | https://www.postgresql.org/download/ |
 | Heroku CLI | Deploying and managing the live website | https://devcenter.heroku.com/articles/heroku-cli |
 | Google Cloud Console | Google sign-in credentials | https://console.cloud.google.com/auth/clients |
@@ -166,7 +169,7 @@ If the website address ever changes (for example a new Heroku app name or a cust
 
 ## Installation and Setup
 
-1. Install Git, Ruby 4.0.6 and PostgreSQL (see [External Dependencies](#external-dependencies)), and make sure PostgreSQL is running.
+1. Install Git, Ruby 4.0.10 and PostgreSQL (see [External Dependencies](#external-dependencies)), and make sure PostgreSQL is running.
 2. Get the code:
 
    ```bash

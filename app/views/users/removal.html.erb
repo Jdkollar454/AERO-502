@@ -1,0 +1,18 @@
+<% content_for :title, "Remove #{@user.name} · AERO Task Hub" %>
+
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">PEOPLE</p>
+    <h1>Remove <%= @user.name %>?</h1>
+    <p class="lede"><%= @user.email %></p>
+  </div>
+</div>
+
+<section class="panel">
+  <p>This person will leave the current People list and will no longer be able to sign in.</p>
+  <p>Their task assignments, logged hours and task history will stay. You can restore them from <strong>Removed people</strong> if they return.</p>
+  <div class="form-actions">
+    <%= button_to "Remove person", user_path(@user), method: :delete, class: "button" %>
+    <%= link_to "Cancel", users_path, class: "button button-secondary" %>
+  </div>
+</section>

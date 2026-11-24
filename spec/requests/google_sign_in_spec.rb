@@ -144,6 +144,15 @@ RSpec.describe "Google sign-in", type: :request do
           expect(response.body).to include("Access not authorized")
      end
 
+     it "refuses Google sign-in for a person removed from the directory" do
+          sign_in(users(:chief))
+          delete user_path(users(:member))
+          delete logout_path
+          google_sign_in(users(:member).email)
+          expect(response).to redirect_to(login_path)
+          expect(flash[:alert]).to include("Access not authorized")
+     end
+
      it "lets the Chief Engineer remove and restore a person's access from the People screen" do
           sign_in(users(:chief))
 
@@ -155,6 +164,20 @@ RSpec.describe "Google sign-in", type: :request do
 
           patch restore_user_path(users(:member))
           expect(users(:member).reload.access_revoked_at).to be_nil
+     end
+
+     it "refuses Google sign-in after permanent removal, including the former email" do
+          person = users(:member)
+          old_email = person.email
+          sign_in(users(:chief))
+          delete user_path(person)
+          delete permanently_remove_user_path(person), params: { confirmation_name: person.name }
+          delete logout_path
+          [ old_email, person.reload.email ].each do |email|
+               google_sign_in(email)
+               expect(response).to redirect_to(login_path)
+               expect(flash[:alert]).to include("Access not authorized")
+          end
      end
 
      it "rejects an open task action after a chief revokes access in another session, preserving past work" do

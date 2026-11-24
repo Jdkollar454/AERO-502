@@ -78,3 +78,7 @@ Members see and can change only their own entries. Leaders can see permitted tas
 | Access denied. The officer guide is available to team officers and the Chief Engineer. | Your role cannot open the officer guide. | Read the member guide, or ask an officer. |
 | Access denied. The administrator guide is available to the Chief Engineer. | Your role cannot open the administrator guide. | Read the guides on your own tabs, or contact the Chief Engineer. |
 | Access denied. The Chief Engineer guide is available to the Chief Engineer. | Your role cannot open the Chief Engineer guide. | Read the guides on your own tabs, or contact the Chief Engineer. |
+
+## Display preference
+
+Select **Dark mode** in the page header to switch between dark and light colors. On your first visit the website follows your device's color preference. Your choice is remembered in this browser across pages and future visits, including the sign-in screen. If browser storage is disabled, the toggle still works for the current page.

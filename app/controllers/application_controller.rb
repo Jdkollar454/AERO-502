@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
      end
 
      def current_user
-          @current_user ||= User.find_by(id: session[:user_id], access_revoked_at: nil)
+          @current_user ||= User.allowed_to_sign_in.find_by(id: session[:user_id])
      end
 
      def signed_in?

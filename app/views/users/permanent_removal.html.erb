@@ -1,0 +1,31 @@
+<% content_for :title, "Permanently remove #{@user.name} · AERO Task Hub" %>
+
+<div class="page-heading">
+  <div>
+    <p class="eyebrow">REMOVED PEOPLE</p>
+    <h1>Permanently remove <%= @user.name %>?</h1>
+    <p class="lede"><%= @user.email %></p>
+  </div>
+</div>
+
+<section class="panel">
+  <p><strong>This cannot be undone.</strong> They will disappear from both People lists and cannot be restored.</p>
+  <p>Their name will remain on their task assignments, logged hours and task history. Their email and sign-in credentials will be erased.</p>
+  <p>If they rejoin, add them as a new person. Their previous contributions will stay with the original record.</p>
+  <% if @user.errors.any? %>
+    <p class="error-summary" role="alert"><%= @user.errors.full_messages.to_sentence %></p>
+  <% end %>
+  <%= form_with url: permanently_remove_user_path(@user), method: :delete do |form| %>
+    <div class="field">
+      <%= form.label :confirmation_name, "Type their full name to confirm" %>
+      <p id="confirmation_name_hint">Enter <strong><%= @user.name %></strong> exactly as shown.</p>
+      <%= form.text_field :confirmation_name, value: params[:confirmation_name], required: true, autocomplete: "off", spellcheck: false,
+            aria: { describedby: "confirmation_name_hint confirmation_name_error", invalid: @user.errors[:confirmation_name].any? } %>
+      <p id="confirmation_name_error" class="field-error" role="alert"><%= @user.errors.full_messages_for(:confirmation_name).to_sentence %></p>
+    </div>
+    <div class="form-actions">
+      <%= form.submit "Permanently remove", class: "button" %>
+      <%= link_to "Cancel", users_path(view: "removed"), class: "button button-secondary" %>
+    </div>
+  <% end %>
+</section>

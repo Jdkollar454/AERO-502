@@ -1,10 +1,20 @@
 class UsersController < ApplicationController
+     PAGE_SIZE = 25
      before_action :require_sign_in
      before_action :ensure_chief_engineer
-     before_action :set_user, only: %i[edit update revoke restore]
+     before_action :set_user, only: %i[edit update revoke restore removal destroy permanent_removal permanently_remove]
 
      def index
-          @users = User.includes(membership: { subteam: :team }).order(:name)
+          @view = params[:view] == "removed" ? "removed" : "current"
+          @query = params[:q].to_s.strip
+          people = @view == "removed" ? User.directory.where.not(removed_at: nil) : User.listed
+          if @query.present?
+               people = people.where("name ILIKE :query OR email ILIKE :query", query: "%#{User.sanitize_sql_like(@query)}%")
+          end
+          @total = people.count
+          @pages = [ (@total.to_f / PAGE_SIZE).ceil, 1 ].max
+          @page = params[:page].to_i.clamp(1, @pages)
+          @users = people.includes(membership: { subteam: :team }).order(:name, :id).limit(PAGE_SIZE).offset((@page - 1) * PAGE_SIZE)
      end
 
      # Adds a person to the allowed list; they sign in with Google using this email.
@@ -23,6 +33,32 @@ class UsersController < ApplicationController
      end
 
      def edit
+     end
+
+     def removal
+     end
+
+     def permanent_removal
+          unless @user.removed?
+               redirect_to users_path(view: "removed"), alert: "Move this person to Removed people before permanently removing them."
+          end
+     end
+
+     def permanently_remove
+          if @user.permanently_remove(confirmation_name: params[:confirmation_name])
+               redirect_to users_path(view: "removed"), notice: "#{@user.name} was permanently removed. Their contributions are kept, but their account cannot be restored."
+          else
+               render :permanent_removal, status: :unprocessable_entity
+          end
+     end
+
+     # Keep the user and every contribution; remove only directory visibility/access.
+     def destroy
+          if @user.update(removed_at: @user.removed_at || Time.current, access_revoked_at: @user.access_revoked_at || Time.current)
+               redirect_to users_path, notice: "#{@user.name} was removed from People and can no longer sign in. Their tasks, hours and history are kept."
+          else
+               redirect_to users_path, alert: @user.errors.full_messages.to_sentence
+          end
      end
 
      def update
@@ -44,8 +80,11 @@ class UsersController < ApplicationController
      end
 
      def restore
-          @user.update!(access_revoked_at: nil)
-          redirect_to users_path, notice: "#{@user.name} can sign in again."
+          if @user.restore_access
+               redirect_to users_path, notice: "#{@user.name} is listed in People and can sign in again."
+          else
+               redirect_to users_path, alert: @user.errors.full_messages.to_sentence
+          end
      end
 
      private
@@ -55,7 +94,7 @@ class UsersController < ApplicationController
      end
 
      def set_user
-          @user = User.find(params[:id])
+          @user = User.directory.find(params[:id])
      end
 
      # Only the Chief Engineer reaches these actions (see ensure_chief_engineer).

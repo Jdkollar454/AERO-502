@@ -58,7 +58,7 @@ The website checks these rules on the server as well as hiding buttons, so typin
 - **Searchable Member filter.** Browse or type a partial name on the board and timeline; the selected member ID and other filters are retained.
 - **Searchable assignee picker.** Type part of a name to find and assign members, even with 80+ people. Only members of the project's class are offered.
 - **Hour logging and planned vs. actual.** Members record hours with the date worked (no more than 24 hours per person per day). Tasks and member summaries show estimate, actual and the difference.
-- **Timeline (Gantt chart).** Every task is drawn as a bar from its start date to its due date, grouped by class and subteam. The chart scrolls sideways through the whole schedule, opens at today, and has a matching text list for accessibility. (The live site still pages through 4/6/8/12-week windows until this change is deployed.)
+- **Timeline (Gantt chart).** Every task is drawn as a bar from its start date to its due date, grouped by class and subteam. The chart scrolls sideways through the whole schedule, opens at today, and has a matching text list for accessibility.
 - **Shared projects.** A project belongs to one class and can include work from several of its subteams.
 - **Subteam rosters.** Leaders see each member's assigned work, including members with no work or zero hours.
 - **CSV downloads.** Filtered task, timeline, member-hour and project-hour reports for use in a spreadsheet.
@@ -66,7 +66,7 @@ The website checks these rules on the server as well as hiding buttons, so typin
 - **Built-in help.** **Help** in the page header opens the member guide inside the website, even before signing in. Officers and the Chief Engineer see extra tabs there with the guide for their role.
 - **Administrator safeguard.** The website will not let the last active Chief Engineer be demoted or removed, so the team can't lock itself out.
 
-> **Release evidence (2026-11-03 UTC):** `aero-task-hub` runs Sprint 3 commit `2e4df57`, release `v23`. Google sign-in was confirmed working by Sonny after the callback correction. Review and promotion into `dev`, `test` and `main` are tracked separately. See [the handover record](docs/SPRINT3_HANDOVER.md).
+> **Release evidence (2026-11-23):** the final application release is commit `9faa5b9` from `main`, Heroku release `v30`. See the [final release verification](docs/turnover/FINAL_RELEASE_VERIFICATION.md) and the [release notes](docs/turnover/RELEASE_NOTES.md). The November 2 database transfer is in [the handover record](docs/SPRINT3_HANDOVER.md).
 
 ## Usage
 
@@ -91,7 +91,7 @@ This code has been run and tested with:
 | Component | Version |
 | --- | --- |
 | Ruby | 4.0.10 (see `.ruby-version`) |
-| Rails | 8.1.4 |
+| Rails | 8.1.4.1 |
 | PostgreSQL | 16 in CI; the deployed Heroku database reports 18.4 |
 | Bundler | 4.0.16 |
 | Ruby gems | Listed in `Gemfile` and `Gemfile.lock` |
@@ -177,7 +177,7 @@ If the website address ever changes (for example a new Heroku app name or a cust
    cd AERO-502
    ```
 
-3. Configure a separate local database. Obtain the credentials key privately only if using encrypted credentials.
+3. Check that your computer's user can create PostgreSQL databases. `config/database.yml` connects to the local PostgreSQL server as your operating-system user, with no password, and uses the databases `aero_502_development` and `aero_502_test`. On Linux or WSL, create the role once with `sudo -u postgres createuser --createdb "$USER"`. No credentials key or other secret is needed for local development.
 4. Install the gems and create the database with practice data:
 
    ```bash
@@ -186,7 +186,8 @@ If the website address ever changes (for example a new Heroku app name or a cust
    bin/rails db:seed
    ```
 
-   The seed creates practice classes, subteams, projects and accounts (`chief@example.test`, `officer.a@example.test`, `member.a@example.test` and others listed in [docs/TRAINING_GUIDE.md](docs/TRAINING_GUIDE.md)). Their password comes from `DEMO_PASSWORD`; ask the team for it.
+   The seed creates practice classes, subteams, projects and accounts (`chief@example.test`, `officer.a@example.test`, `member.a@example.test` and others listed in [docs/TRAINING_GUIDE.md](docs/TRAINING_GUIDE.md)). Their password comes from `DEMO_PASSWORD`. If that variable is not set, the seed uses the practice default written near the top of `db/seeds.rb`; these accounts hold practice data only.
+5. Check the setup: `bin/rails server`, open http://localhost:3000/up (it shows a green page), then sign in at http://localhost:3000/login as `member.a@example.test`. **My Tasks** lists that member's practice tasks.
 
 ## Running the Application
 
@@ -209,19 +210,19 @@ SimpleCov writes a coverage report to `coverage/index.html`. The automated tests
 
 ## Deployment
 
-The live app is **`aero-task-hub`** at https://aero-task-hub-b5f4953964ed.herokuapp.com/. Its verified deployment is commit `2e4df57` from `test`, Heroku release `v23`. The branch reconciliation PRs do not deploy anything.
+The live app is **`aero-task-hub`** at https://aero-task-hub-b5f4953964ed.herokuapp.com/. Its verified application release is commit `9faa5b9` from `main`, Heroku release `v30` (November 23, 2026); see the [final release verification](docs/turnover/FINAL_RELEASE_VERIFICATION.md).
 
-Before any future deployment, finish Joshua's review, pass CI on the resulting release commit, capture a database backup, and verify the deployment source. Until `main` contains the approved Sprint 3 changes, keep automatic deployment from the older `main` disabled. Follow [the deployment guide](docs/DEPLOYMENT.md).
+Heroku deploys `main` automatically: releases v25 to v27 and v30 each appeared a few minutes after a pull request was merged into `main` and its CI run finished. So merging into `main` is a release. Before merging, pass CI on the pull request, get a review, and capture a database backup. Follow [the deployment guide](docs/DEPLOYMENT.md). To update or recover the live website, follow the [administrator guide](docs/ADMIN_GUIDE.md) sections **Update procedure**, **Simulated failed update and rollback** and **Database backup and restore**.
 
 ## CI/CD
 
-- **Review flow:** feature branches → `dev` → `test` → `main`, with review and passing CI at each promotion. The November 3 deployment from `test` is an explicitly recorded exception being reconciled through PRs.
+- **Review flow:** feature branches → `dev` → `test` → `main`, with review and passing CI at each promotion. Three recorded exceptions: the November 3 deployment from `test`; pull requests #48 to #50 (November 17) and #51 (November 23), which went from feature branches straight to `main` with passing CI but no approving review; and releases v28 and v29 (November 19), which were deployed from a feature branch before any pull request or CI run and were replaced by v30.
 - **CI:** every pull request and pushes to `dev`, `test` and `main` run RSpec against PostgreSQL 16, RuboCop, Brakeman and the import-map audit.
-- **Deployment:** verify the actual Heroku Deploy configuration. Creating or merging a review branch is not authorization to deploy an unverified commit.
+- **Deployment:** a merge into `main` is deployed by Heroku after its CI run passes; the release phase runs `bin/rails db:migrate`. Confirm the setting under Heroku dashboard → app → **Deploy** after any ownership change.
 
 ## Hosting Cost
 
-The observed plans are Heroku Eco and Postgres Essential-0. Record current charges from the owner's Resources and Billing screens at handover; the final account's invoice has not been reviewed. A stopped web process does not remove its database add-on or establish that all charges have ended.
+The observed plans (November 17, 2026) are one Heroku Eco dyno ($5 per month, flat) and Heroku Postgres Essential-0 (up to $5 per month), about $10 per month in total. Record current charges from the owner's Resources and Billing screens at handover; the final account's invoice has not been reviewed. A stopped web process does not remove its database add-on or establish that all charges have ended.
 
 ## Documentation
 
@@ -231,13 +232,14 @@ The observed plans are Heroku Eco and Postgres Essential-0. Record current charg
 - [Training checklist](docs/TRAINING_GUIDE.md)
 - [Quality strategy](docs/QUALITY_STRATEGY.md) and [verification results](docs/VERIFICATION.md)
 - [Google sign-in verification](docs/KAN25_VERIFICATION.md)
+- Turnover records: [release notes](docs/turnover/RELEASE_NOTES.md), [final release verification](docs/turnover/FINAL_RELEASE_VERIFICATION.md), [cumulative test results](docs/turnover/TEST_RESULTS.md), [security check](docs/turnover/SECURITY_CHECK.md), [staging check](docs/turnover/STAGING_CHECK.md), [recovery rehearsal](docs/turnover/RECOVERY_CHECK.md), [database design check](docs/turnover/DATABASE_DESIGN_CHECK.md) and [developer instruction check](docs/turnover/DEVELOPER_INSTRUCTION_CHECK.md)
 - [Sprint 3 stories and migration verification](docs/SPRINT3_STORIES_VERIFICATION.md)
 - External: [Rails Guides](https://guides.rubyonrails.org/), [RSpec Rails](https://rspec.info/), [OmniAuth Google OAuth2](https://github.com/zquestz/omniauth-google-oauth2), [Heroku Config Vars](https://devcenter.heroku.com/articles/config-vars), [Heroku Postgres backups](https://devcenter.heroku.com/articles/heroku-postgres-backups)
 
 ## Support
 
 - **Members and officers:** start with **Help** in the website. For access problems ("Access not authorized"), contact the Chief Engineer, who can add or restore you under **People**.
-- **Chief Engineer:** see the [administrator guide](docs/ADMIN_GUIDE.md). Until handover is complete, the development team below can help.
+- **Chief Engineer:** see the [administrator guide](docs/ADMIN_GUIDE.md). The development team below can help until course support ends on **November 23, 2026**.
 - **Bugs and requests:** open an issue at https://github.com/joshEng1/AERO-502/issues.
 
 ## Contact
@@ -245,7 +247,6 @@ The observed plans are Heroku Eco and Postgres Essential-0. Record current charg
 | Name | Role | GitHub |
 | --- | --- | --- |
 | Joshua Eng | Developer | [@joshEng1](https://github.com/joshEng1) |
-| Rahul Saravanakumar | Developer | [@rahulsaravanakumar](https://github.com/rahulsaravanakumar) |
 | Sonny Hernandez | Developer | [@SonnyHernandez90](https://github.com/SonnyHernandez90) |
 
 **Customer:** JD Kollar, SAE AERO Design (Texas A&M).

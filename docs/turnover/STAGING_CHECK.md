@@ -1,6 +1,6 @@
 # Staging deployment check
 
-> **Status on November 23, 2026:** this is the record of the staging check made on November 17 for commit `3417e8a`. The staging app `aero-task-hub-staging` still runs that commit. Release v30 (`9faa5b9`) went to production through pull request #51 and CI and was not deployed to staging first.
+> **Status on November 23, 2026:** this is the record of the staging check made on November 17 for commit `3417e8a`. The staging app `aero-task-hub-staging` still runs that commit. Releases v30 to v33 went to production through pull requests and CI and were not deployed to staging first.
 
 Run by Joshua Eng on November 17, 2026 (Texas time), with Claude Code. The earlier staging app, `protected-beyond-83306`, last received the `test` branch on November 3 and its address now answers "No such app"; it belonged to another account. A new staging app was created in Joshua's Heroku account for this check.
 

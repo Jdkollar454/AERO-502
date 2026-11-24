@@ -66,7 +66,7 @@ The website checks these rules on the server as well as hiding buttons, so typin
 - **Built-in help.** **Help** in the page header opens the member guide inside the website, even before signing in. Officers and the Chief Engineer see extra tabs there with the guide for their role.
 - **Administrator safeguard.** The website will not let the last active Chief Engineer be demoted or removed, so the team can't lock itself out.
 
-> **Release evidence (2026-11-23):** the final application release is commit `9faa5b9` from `main`, Heroku release `v30`. See the [final release verification](docs/turnover/FINAL_RELEASE_VERIFICATION.md) and the [release notes](docs/turnover/RELEASE_NOTES.md). The November 2 database transfer is in [the handover record](docs/SPRINT3_HANDOVER.md).
+> **Release evidence (2026-11-23):** the final application release is commit `b236771` from `main`, Heroku release `v33`. See the [final release verification](docs/turnover/FINAL_RELEASE_VERIFICATION.md) and the [release notes](docs/turnover/RELEASE_NOTES.md). The November 2 database transfer is in [the handover record](docs/SPRINT3_HANDOVER.md).
 
 ## Usage
 
@@ -210,13 +210,13 @@ SimpleCov writes a coverage report to `coverage/index.html`. The automated tests
 
 ## Deployment
 
-The live app is **`aero-task-hub`** at https://aero-task-hub-b5f4953964ed.herokuapp.com/. Its verified application release is commit `9faa5b9` from `main`, Heroku release `v30` (November 23, 2026); see the [final release verification](docs/turnover/FINAL_RELEASE_VERIFICATION.md).
+The live app is **`aero-task-hub`** at https://aero-task-hub-b5f4953964ed.herokuapp.com/. Its verified application release is commit `b236771` from `main`, Heroku release `v33` (November 23, 2026); see the [final release verification](docs/turnover/FINAL_RELEASE_VERIFICATION.md).
 
-Heroku deploys `main` automatically: releases v25 to v27 and v30 each appeared a few minutes after a pull request was merged into `main` and its CI run finished. So merging into `main` is a release. Before merging, pass CI on the pull request, get a review, and capture a database backup. Follow [the deployment guide](docs/DEPLOYMENT.md). To update or recover the live website, follow the [administrator guide](docs/ADMIN_GUIDE.md) sections **Update procedure**, **Simulated failed update and rollback** and **Database backup and restore**.
+Heroku deploys `main` automatically: releases v25 to v27, v30, v31 and v33 each appeared a few minutes after a pull request was merged into `main` and its CI run finished. So merging into `main` is a release. Before merging, pass CI on the pull request, get a review, and capture a database backup. Follow [the deployment guide](docs/DEPLOYMENT.md). To update or recover the live website, follow the [administrator guide](docs/ADMIN_GUIDE.md) sections **Update procedure**, **Simulated failed update and rollback** and **Database backup and restore**.
 
 ## CI/CD
 
-- **Review flow:** feature branches → `dev` → `test` → `main`, with review and passing CI at each promotion. Three recorded exceptions: the November 3 deployment from `test`; pull requests #48 to #50 (November 17) and #51 (November 23), which went from feature branches straight to `main` with passing CI but no approving review; and releases v28 and v29 (November 19), which were deployed from a feature branch before any pull request or CI run and were replaced by v30.
+- **Review flow:** feature branches → `dev` → `test` → `main`, with review and passing CI at each promotion. Two recorded exceptions: the November 3 deployment from `test`, and releases v28 and v29 (November 19), which were deployed from a feature branch before any pull request or CI run and were replaced by v30.
 - **CI:** every pull request and pushes to `dev`, `test` and `main` run RSpec against PostgreSQL 16, RuboCop, Brakeman and the import-map audit.
 - **Deployment:** a merge into `main` is deployed by Heroku after its CI run passes; the release phase runs `bin/rails db:migrate`. Confirm the setting under Heroku dashboard → app → **Deploy** after any ownership change.
 

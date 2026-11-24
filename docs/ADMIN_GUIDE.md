@@ -6,7 +6,7 @@ Keep a copy of this guide in an organization-owned location (for example the SAE
 
 ## Ownership and support
 
-Current app: **aero-task-hub**, website https://aero-task-hub-b5f4953964ed.herokuapp.com/, release **v30**, tested commit **9faa5b9** (November 23, 2026). Heroku ownership was observed under Joshua's account; transfer to JD is still pending. See `docs/SPRINT3_HANDOVER.md` for dated evidence and remaining work. Verify these details at each release.
+Current app: **aero-task-hub**, website https://aero-task-hub-b5f4953964ed.herokuapp.com/, release **v33**, tested commit **b236771** (November 23, 2026). Heroku ownership was transferred to JD Kollar on November 23, 2026. See `docs/SPRINT3_HANDOVER.md` for dated evidence and remaining work. Verify these details at each release.
 
 | Item | Where to find it |
 | --- | --- |

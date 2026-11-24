@@ -5,13 +5,13 @@
 - App: `aero-task-hub` (formerly `sleepy-depths-47724`).
 - Website: https://aero-task-hub-b5f4953964ed.herokuapp.com/
 - Repository: https://github.com/joshEng1/AERO-502
-- Recorded release: `v30`, commit `9faa5b95983ce2bf371e95ad6073fc80e11e0316`, deployed November 23, 2026. See [the final release verification](turnover/FINAL_RELEASE_VERIFICATION.md). The November 2 database transfer used `v23`, commit `2e4df57e136076beccb2eeb534b07183500aa280`.
+- Recorded release: `v33`, commit `b236771a5fb0ee9ecd953d9140ca025ec07236d5`, deployed November 23, 2026. See [the final release verification](turnover/FINAL_RELEASE_VERIFICATION.md). The November 2 database transfer used `v23`, commit `2e4df57e136076beccb2eeb534b07183500aa280`.
 - Heroku owner observed: Joshua's account. JD's ownership transfer remains pending.
 - Database: `postgresql-convex-72612`; Postgres Essential-0, version reported as 18.4.
 - `sleepy-bayou-60650` was paused as a fallback. Its deletion has not been confirmed.
 - Staging app: `aero-task-hub-staging`, https://aero-task-hub-staging-ca661d8bf0bf.herokuapp.com/, with its own Essential-0 database and practice data only. It does not deploy automatically; see [the staging check](turnover/STAGING_CHECK.md) for how to update it. Check a release there before merging it into `main`.
 
-Heroku deploys `main` automatically after its CI run passes: releases v25, v26, v27 and v30 each followed a merge into `main` within a few minutes. A merge into `main` is therefore a release. Use the normal feature → dev → test → main flow, and confirm the setting under Heroku dashboard → app → **Deploy** after any ownership change.
+Heroku deploys `main` automatically after its CI run passes: releases v25, v26, v27, v30, v31 and v33 each followed a merge into `main` within a few minutes. A merge into `main` is therefore a release. Use the normal feature → dev → test → main flow, and confirm the setting under Heroku dashboard → app → **Deploy** after any ownership change.
 
 ## Configuration
 

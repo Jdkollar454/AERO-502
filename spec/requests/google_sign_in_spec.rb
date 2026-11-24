@@ -159,8 +159,8 @@ RSpec.describe "Google sign-in", type: :request do
           patch revoke_user_path(users(:member))
           expect(response).to redirect_to(users_path)
           expect(users(:member).reload.access_revoked_at).to be_present
-          get users_path
-          expect(response.body).to include("Access removed")
+          get users_path, params: { view: "removed" }
+          expect(response.body).to include("Removed from People")
 
           patch restore_user_path(users(:member))
           expect(users(:member).reload.access_revoked_at).to be_nil

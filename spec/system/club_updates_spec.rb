@@ -57,7 +57,7 @@ RSpec.describe "Club administration updates", type: :system do
      end
 
      it "confirms permanent removal in the browser and keeps the person's work" do
-          users(:member).update!(removed_at: Time.current, access_revoked_at: Time.current)
+          users(:member).update!(access_revoked_at: Time.current)
           sign_in_chief
           click_link "People", exact: true
           click_link "Removed people", exact: true

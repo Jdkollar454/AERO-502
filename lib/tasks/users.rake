@@ -12,7 +12,6 @@ namespace :users do
                user.role = :chief_engineer
                user.subteam = nil
                user.access_revoked_at = nil
-               user.removed_at = nil
 
                if user.save
                     puts "#{email}: Chief Engineer (#{user.previously_new_record? ? 'added' : 'updated'})"

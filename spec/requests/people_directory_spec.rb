@@ -64,9 +64,11 @@ RSpec.describe "People directory", type: :request do
           expect(client.response).to have_http_status(:unprocessable_content)
      end
 
-     it "keeps restricted people listed and protects the final active chief from removal" do
+     it "moves a person whose access is removed to Removed people and protects the final active chief from removal" do
           patch revoke_user_path(users(:member))
           get users_path, params: { q: users(:member).name }
+          expect(response.parsed_body.css("tbody th").map(&:text)).to eq([])
+          get users_path, params: { q: users(:member).name, view: "removed" }
           expect(response.parsed_body.css("tbody th").map(&:text)).to eq([ users(:member).name ])
           delete user_path(users(:chief))
           expect(flash[:alert]).to include("At least one active Chief Engineer is required")

@@ -7,7 +7,7 @@ class UsersController < ApplicationController
      def index
           @view = params[:view] == "removed" ? "removed" : "current"
           @query = params[:q].to_s.strip
-          people = @view == "removed" ? User.directory.where.not(removed_at: nil) : User.listed
+          people = @view == "removed" ? User.directory.where.not(access_revoked_at: nil) : User.listed
           if @query.present?
                people = people.where("name ILIKE :query OR email ILIKE :query", query: "%#{User.sanitize_sql_like(@query)}%")
           end
@@ -54,7 +54,7 @@ class UsersController < ApplicationController
 
      # Keep the user and every contribution; remove only directory visibility/access.
      def destroy
-          if @user.update(removed_at: @user.removed_at || Time.current, access_revoked_at: @user.access_revoked_at || Time.current)
+          if @user.update(access_revoked_at: @user.access_revoked_at || Time.current)
                redirect_to users_path, notice: "#{@user.name} was removed from People and can no longer sign in. Their tasks, hours and history are kept."
           else
                redirect_to users_path, alert: @user.errors.full_messages.to_sentence
@@ -71,8 +71,9 @@ class UsersController < ApplicationController
           end
      end
 
+     # Kept for existing links and forms; the same change as removing the person.
      def revoke
-          if @user.update(access_revoked_at: Time.current)
+          if @user.update(access_revoked_at: @user.access_revoked_at || Time.current)
                redirect_to users_path, notice: "#{@user.name} can no longer sign in. Their tasks and hours are kept."
           else
                redirect_to users_path, alert: @user.errors.full_messages.to_sentence

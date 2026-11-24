@@ -68,7 +68,7 @@ RSpec.describe "User guide", type: :request do
           expect(member).not_to include("Create or edit a task", "Subteam rosters", "Add person")
           expect(officer).to include("Create or edit a task", "Subteam rosters", "Download reports", "Additional teams")
           expect(officer).not_to include("Record actual hours", "Add person")
-          expect(chief).to include("Add person", "Change role", "Restrict access", "Remove person")
+          expect(chief).to include("Add person", "Change role", "Remove person", "Restore person")
           expect(chief).not_to include("Create or edit a task", "Record actual hours")
      end
 

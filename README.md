@@ -51,7 +51,7 @@ The website checks these rules on the server as well as hiding buttons, so typin
 ## Features
 
 - **Google sign-in with an approved-people list.** The Chief Engineer adds each person's TAMU email and role on the **People** page. Removing someone's access keeps their past tasks and hours.
-- **Searchable People directory.** Search names or emails, browse 25 people per page, restrict access, or remove departing members while retaining their assignments, hours and history. Restore returning members from **Removed people**, or choose **Permanently remove** and confirm their name to clear their account from both lists. Permanent removal erases sign-in details and prevents restoration while retaining named contribution history.
+- **Searchable People directory.** Search names or emails, browse 25 people per page, and remove departing members while retaining their assignments, hours and history. Restore returning members from **Removed people**, or choose **Permanently remove** and confirm their name to clear their account from both lists. Permanent removal erases sign-in details and prevents restoration while retaining named contribution history.
 - **Chief Engineer self-assignment.** Chiefs can select their own name on task forms for any team, use **My Tasks**, and record hours that appear in reports.
 - **Dark mode.** A header toggle follows the device preference initially and remembers the choice in this browser.
 - **Task board.** Backlog, In Progress and Completed columns with counts, overdue labels, and search and filters by class, subteam, project and member.

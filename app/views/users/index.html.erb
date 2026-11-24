@@ -4,7 +4,7 @@
   <div>
     <p class="eyebrow">ADMINISTRATION</p>
     <h1>People and roles</h1>
-    <p class="lede">Find people, manage roles and restrict access. Remove people who leave the club while keeping their contributions.</p>
+    <p class="lede">Find people and manage roles. Remove people who leave the club while keeping their contributions.</p>
   </div>
   <%= link_to "Add person", new_user_path, class: "button" %>
 </div>
@@ -53,7 +53,7 @@
               <td><%= user.email %></td>
               <td><%= user.role_label %></td>
               <td><%= user.team&.name || "All teams" %><%= " · #{user.subteam.name}" if user.subteam %></td>
-              <td><%= user.removed? ? "Removed from People" : (user.access_revoked? ? "Access removed" : "Can sign in") %></td>
+              <td><%= user.removed? ? "Removed from People" : "Can sign in" %></td>
               <td>
                 <div class="row-actions">
                   <% if user.removed? %>
@@ -61,11 +61,6 @@
                     <%= link_to "Permanently remove", permanent_removal_user_path(user), aria: { label: "Permanently remove #{user.name}" } %>
                   <% else %>
                     <%= link_to "Change role", edit_user_path(user), aria: { label: "Change role for #{user.name}" } %>
-                    <% if user.access_revoked? %>
-                      <%= button_to "Restore access", restore_user_path(user), method: :patch, class: "link-button", aria: { label: "Restore access for #{user.name}" } %>
-                    <% else %>
-                      <%= button_to "Restrict access", revoke_user_path(user), method: :patch, class: "link-button", aria: { label: "Restrict access for #{user.name}" } %>
-                    <% end %>
                     <%= link_to "Remove person", removal_user_path(user), aria: { label: "Remove person #{user.name}" } %>
                   <% end %>
                 </div>

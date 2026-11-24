@@ -16,8 +16,9 @@ class User < ApplicationRecord
      scope :in_teams, ->(ids) { joins(membership: :subteam).where(subteams: { team_id: ids }) }
      scope :in_subteam, ->(id) { joins(:membership).where(memberships: { subteam_id: id }) }
      scope :directory, -> { where(permanently_removed_at: nil) }
-     scope :listed, -> { directory.where(removed_at: nil) }
-     scope :allowed_to_sign_in, -> { listed.where(access_revoked_at: nil) }
+     # One date records leaving the People list and losing sign-in: access_revoked_at (approved design).
+     scope :listed, -> { directory.where(access_revoked_at: nil) }
+     scope :allowed_to_sign_in, -> { listed }
      scope :assignable, -> { allowed_to_sign_in.where(role: [ :member, :officer ]).joins(:membership) }
 
      # Chiefs have no team membership and may add themselves to any team's work.
@@ -85,11 +86,11 @@ class User < ApplicationRecord
      end
 
      def access_revoked?
-          access_revoked_at.present? || removed? || permanently_removed?
+          access_revoked_at.present? || permanently_removed?
      end
 
      def removed?
-          removed_at.present?
+          access_revoked_at.present?
      end
 
      def permanently_removed?
@@ -107,7 +108,7 @@ class User < ApplicationRecord
                elsif confirmation_name.to_s != name
                     errors.add(:confirmation_name, "must match the person's name exactly")
                else
-                    next update(permanently_removed_at: Time.current, access_revoked_at: access_revoked_at || Time.current,
+                    next update(permanently_removed_at: Time.current,
                                 email: "removed-#{id}-#{SecureRandom.uuid}@example.invalid", password_digest: nil)
                end
                false
@@ -115,7 +116,7 @@ class User < ApplicationRecord
      end
 
      def restore_access
-          with_access_lock { update(access_revoked_at: nil, removed_at: nil) }
+          with_access_lock { update(access_revoked_at: nil) }
      end
 
      def authenticate_password_sign_in(password)

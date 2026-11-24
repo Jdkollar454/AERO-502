@@ -9,12 +9,11 @@ Updating, backing up and restoring the website are in the **Administrator guide*
 1. Select **People**. Search by name or email, then select **Search**. Each page shows up to 25 people; **Next** and **Previous** keep your search. **Clear** resets it.
 2. Select **Add person**, enter the name and Google email, and choose the role and **Class · Subteam** membership. Select **Add person** to save. The person can sign in with Google straight away, with no separate password. Email capitalization does not matter. The class is derived from the selected subteam. Chief Engineers have no membership.
 3. Select **Change role** to change someone's role, team or subteam. The change applies the next time they load a page.
-4. Select **Restrict access** to stop someone signing in while keeping them in the current list. **Restore access** lets them sign in again.
-5. When someone leaves the club, select **Remove person**, review the confirmation, then select **Remove person** again. They disappear from **Current people** and cannot sign in. Their assignments, logged hours and task history remain with their name.
-6. If they return, open **Removed people**, search for them and select **Restore person**. This restores the same account and sign-in access without losing their contributions. Do not add a duplicate account.
-7. To remove them from both People lists permanently, choose **Permanently remove** in **Removed people**, type their full name exactly as shown, and confirm. This cannot be undone. Their email and sign-in credentials are erased, and they leave the roster; their name stays on their assignments, hours and history. If they rejoin, add a new account with their original email. Their old contributions remain with the original record. **Cancel** leaves the account restorable.
+4. When someone leaves the club, or should no longer sign in, select **Remove person**, review the confirmation, then select **Remove person** again. They disappear from **Current people** and cannot sign in. Their assignments, logged hours and task history remain with their name.
+5. If they return, open **Removed people**, search for them and select **Restore person**. This restores the same account and sign-in access without losing their contributions. Do not add a duplicate account.
+6. To remove them from both People lists permanently, choose **Permanently remove** in **Removed people**, type their full name exactly as shown, and confirm. This cannot be undone. Their email and sign-in credentials are erased, and they leave the roster; their name stays on their assignments, hours and history. If they rejoin, add a new account with their original email. Their old contributions remain with the original record. **Cancel** leaves the account restorable.
 
-Both restriction and removal block actions from already-open pages. The last active Chief Engineer cannot be removed or restricted. Officers and members cannot manage People.
+Removal also blocks actions from already-open pages. The last active Chief Engineer cannot be removed. Officers and members cannot manage People.
 
 ## Assign yourself to a task
 

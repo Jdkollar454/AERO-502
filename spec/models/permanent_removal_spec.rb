@@ -1,11 +1,12 @@
 require "rails_helper"
 require Rails.root.join("db/migrate/20261119180000_add_permanent_removal_to_users")
+require Rails.root.join("db/migrate/20261124030000_merge_removal_into_access_revoked")
 
 RSpec.describe "Permanent removal integrity" do
      let(:person) { users(:member) }
 
      def remove_permanently
-          person.update!(removed_at: Time.current, access_revoked_at: Time.current)
+          person.update!(access_revoked_at: Time.current)
           expect(person.permanently_remove(confirmation_name: person.name)).to be(true)
      end
 
@@ -23,7 +24,7 @@ RSpec.describe "Permanent removal integrity" do
      end
 
      it "rechecks Removed status when a person was restored while the confirmation was open" do
-          person.update!(removed_at: Time.current, access_revoked_at: Time.current)
+          person.update!(access_revoked_at: Time.current)
           stale_account = User.find(person.id)
           person.restore_access
           expect(stale_account.permanently_remove(confirmation_name: person.name)).to be(false)
@@ -34,7 +35,7 @@ RSpec.describe "Permanent removal integrity" do
 
      it "blocks reactivation even through direct database updates" do
           remove_permanently
-          [ { removed_at: nil }, { access_revoked_at: nil }, { password_digest: "new-credential" } ].each do |attributes|
+          [ { access_revoked_at: nil }, { password_digest: "new-credential" } ].each do |attributes|
                expect do
                     User.transaction(requires_new: true) { User.where(id: person.id).update_all(attributes) }
                end.to raise_error(ActiveRecord::StatementInvalid, /permanently_removed_users_cannot_sign_in/)
@@ -43,8 +44,10 @@ RSpec.describe "Permanent removal integrity" do
           expect(person.reload).to be_permanently_removed
      end
 
-     it "also revokes credentials on an older removed account without a revocation timestamp" do
-          person.update!(removed_at: Time.current)
+     it "requires the person to be removed first, then erases their credentials" do
+          expect(person.permanently_remove(confirmation_name: person.name)).to be(false)
+          expect(person.errors[:base]).to include("Move this person to Removed people before permanently removing them.")
+          person.update!(access_revoked_at: Time.current)
           expect(person.permanently_remove(confirmation_name: person.name)).to be(true)
           expect(person.reload.access_revoked_at).to be_present
           expect(person.password_digest).to be_nil
@@ -58,11 +61,18 @@ RSpec.describe "Permanent removal integrity" do
           expect(person.reload).to be_permanently_removed
      end
 
-     it "can roll back and reapply before any permanent removal without losing work" do
+     it "can roll back and reapply the merge of removal into access_revoked_at without losing work or removals" do
+          person.update!(access_revoked_at: Time.current)
           saved_work = TimeEntry.order(:id).map(&:attributes)
-          migration = AddPermanentRemovalToUsers.new
+          User.connection.execute("SET CONSTRAINTS ALL IMMEDIATE")
+          migration = MergeRemovalIntoAccessRevoked.new
           migration.suppress_messages { migration.down }
+          expect(User.connection.select_value("SELECT removed_at IS NOT NULL FROM users WHERE id = #{person.id}")).to be(true)
           migration.suppress_messages { migration.up }
+          User.reset_column_information
+          expect(User.column_names).not_to include("removed_at")
           expect(TimeEntry.order(:id).map(&:attributes)).to eq(saved_work)
+          expect(person.reload).to be_removed
+          expect(User.allowed_to_sign_in).not_to include(person)
      end
 end
